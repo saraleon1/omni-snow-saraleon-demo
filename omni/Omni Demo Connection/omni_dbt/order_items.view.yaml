@@ -1,0 +1,115 @@
+# Reference this view as omni_dbt__order_items
+schema_label: ""
+
+schema: omni_dbt
+table_name: ORDER_ITEMS
+
+dimensions:
+  order_item_id:
+    sql: '"ORDER_ITEM_ID"'
+    format: ID
+
+  order_id:
+    sql: '"ORDER_ID"'
+    format: ID
+
+  product_id:
+    sql: '"PRODUCT_ID"'
+    format: ID
+
+  ordered_at:
+    sql: '"ORDERED_AT"'
+
+  product_name:
+    sql: '"PRODUCT_NAME"'
+
+  product_price:
+    sql: '"PRODUCT_PRICE"'
+
+  is_food_item:
+    sql: '"IS_FOOD_ITEM"'
+
+  is_drink_item:
+    sql: '"IS_DRINK_ITEM"'
+
+  supply_cost:
+    sql: '"SUPPLY_COST"'
+
+measures:
+  count:
+    aggregate_type: count
+
+#The info below was pulled from your dbt repository and is read-only.
+dbt:
+  name: order_items
+  target_schema: dbt_sleon_prod
+  config:
+    materialized: table
+  code: |-
+    with
+
+    order_items as (
+
+        select * from {{ ref('stg_order_items') }}
+
+    ),
+
+
+    orders as (
+
+        select * from {{ ref('stg_orders') }}
+
+    ),
+
+    products as (
+
+        select * from {{ ref('stg_products') }}
+
+    ),
+
+    supplies as (
+
+        select * from {{ ref('stg_supplies') }}
+
+    ),
+
+    order_supplies_summary as (
+
+        select
+            product_id,
+
+            sum(supply_cost) as supply_cost
+
+        from supplies
+
+        group by 1
+
+    ),
+
+    joined as (
+
+        select
+            order_items.*,
+
+            orders.ordered_at,
+
+            products.product_name,
+            products.product_price,
+            products.is_food_item,
+            products.is_drink_item,
+
+            order_supplies_summary.supply_cost
+
+        from order_items
+
+        left join orders on order_items.order_id = orders.order_id
+
+        left join products on order_items.product_id = products.product_id
+
+        left join order_supplies_summary
+            on order_items.product_id = order_supplies_summary.product_id
+
+    )
+
+    select * from joined
+  referenced_by: [ orders ]

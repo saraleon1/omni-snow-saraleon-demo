@@ -1,0 +1,43 @@
+# Reference this view as omni_dbt__metricflow_time_spine
+schema_label: ""
+#This description was pulled from dbt.
+description: A time spine with one row per day, ranging from 2020-01-01 to 2039-12-31.
+
+schema: omni_dbt
+table_name: METRICFLOW_TIME_SPINE
+
+dimensions:
+  date_day:
+    sql: '"DATE_DAY"'
+
+measures:
+  count:
+    aggregate_type: count
+
+#The info below was pulled from your dbt repository and is read-only.
+dbt:
+  name: metricflow_time_spine
+  target_schema: dbt_sleon_prod
+  description: A time spine with one row per day, ranging from 2020-01-01 to 2039-12-31.
+  config:
+    materialized: table
+  code: |-
+    -- metricflow_time_spine.sql
+    with
+
+    days as (
+
+        --for BQ adapters use "DATE('01/01/2000','mm/dd/yyyy')"
+        {{ dbt_date.get_base_dates(n_dateparts=365*10, datepart="day") }}
+
+    ),
+
+    cast_to_date as (
+
+        select cast(date_day as date) as date_day
+
+        from days
+
+    )
+
+    select * from cast_to_date

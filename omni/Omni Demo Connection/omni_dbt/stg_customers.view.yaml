@@ -1,0 +1,56 @@
+# Reference this view as omni_dbt__stg_customers
+schema_label: ""
+#This description was pulled from dbt.
+description: Customer data with basic cleaning and transformation applied, one
+  row per customer.
+
+schema: omni_dbt
+table_name: STG_CUSTOMERS
+
+dimensions:
+  customer_id:
+    sql: '"CUSTOMER_ID"'
+    format: ID
+    #This description was pulled from dbt.
+    description: The unique key for each customer.
+
+  customer_name:
+    sql: '"CUSTOMER_NAME"'
+
+measures:
+  count:
+    aggregate_type: count
+
+#The info below was pulled from your dbt repository and is read-only.
+dbt:
+  name: stg_customers
+  target_schema: dbt_sleon_prod
+  description: Customer data with basic cleaning and transformation applied, one
+    row per customer.
+  config:
+    materialized: view
+  code: |-
+    with
+
+    source as (
+
+        select * from {{ source('dbt_sleon', 'raw_customers') }}
+
+    ),
+
+    renamed as (
+
+        select
+
+            ----------  ids
+            id as customer_id,
+
+            ---------- text
+            name as customer_name
+
+        from source
+
+    )
+
+    select * from renamed
+  referenced_by: [ customers ]
