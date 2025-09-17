@@ -171,4 +171,4 @@ dbt:
     )
 
     select * from customer_order_count
-  referenced_by: [ customers ]
+  referenced_by: [ customers, fct_customers ]
