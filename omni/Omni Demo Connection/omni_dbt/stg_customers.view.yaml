@@ -53,4 +53,4 @@ dbt:
     )
 
     select * from renamed
-  referenced_by: [ customers ]
+  referenced_by: [ customers, fct_customers ]
