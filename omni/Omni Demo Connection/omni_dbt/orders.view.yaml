@@ -1,4 +1,5 @@
 # Reference this view as omni_dbt__orders
+label: Orders
 schema_label: ""
 #This description was pulled from dbt.
 description: Order overview data mart, offering key details for each order
@@ -80,9 +81,37 @@ dimensions:
   customer_order_number:
     sql: '"CUSTOMER_ORDER_NUMBER"'
 
+  order_total_dim:
+    # Dimension is defined in the 'orders' dbt semantic model (models/marts/orders.yml)
+    sql: '"ORDER_TOTAL"'
+
 measures:
   count:
     aggregate_type: count
+
+  order_total:
+    # Measure is defined in the 'orders' dbt semantic model (models/marts/orders.yml)
+    sql: '"ORDER_TOTAL"'
+    description: The total amount for each order including taxes.
+    aggregate_type: sum
+
+  order_count:
+    # Measure is defined in the 'orders' dbt semantic model (models/marts/orders.yml)
+    sql: "1"
+    aggregate_type: sum
+
+  tax_paid:
+    # Measure is defined in the 'orders' dbt semantic model (models/marts/orders.yml)
+    sql: '"TAX_PAID"'
+    description: The total tax paid on each order.
+    aggregate_type: sum
+
+  order_cost:
+    # Measure is defined in the 'orders' dbt semantic model (models/marts/orders.yml)
+    sql: '"ORDER_COST"'
+    description: The cost for each order item. Cost is calculated as a sum of the
+      supply cost for each order item.
+    aggregate_type: sum
 
 #The info below was pulled from your dbt repository and is read-only.
 dbt:

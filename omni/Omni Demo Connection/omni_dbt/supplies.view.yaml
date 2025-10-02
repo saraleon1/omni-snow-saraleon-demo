@@ -1,4 +1,5 @@
 # Reference this view as omni_dbt__supplies
+label: Supplies
 schema_label: ""
 
 schema: omni_dbt

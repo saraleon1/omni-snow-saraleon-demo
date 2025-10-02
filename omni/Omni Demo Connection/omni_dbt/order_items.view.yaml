@@ -1,4 +1,5 @@
 # Reference this view as omni_dbt__order_items
+label: Order Item
 schema_label: ""
 
 schema: omni_dbt
@@ -38,6 +39,33 @@ dimensions:
 measures:
   count:
     aggregate_type: count
+
+  revenue:
+    # Measure is defined in the 'order_item' dbt semantic model (models/marts/order_items.yml)
+    sql: '"PRODUCT_PRICE"'
+    description: The revenue generated for each order item. Revenue is calculated as
+      a sum of revenue associated with each product in an order.
+    aggregate_type: sum
+
+  food_revenue:
+    # Measure is defined in the 'order_item' dbt semantic model (models/marts/order_items.yml)
+    sql: CASE WHEN "IS_FOOD_ITEM" THEN "PRODUCT_PRICE" ELSE 0 END
+    description: The revenue generated for each order item. Revenue is calculated as
+      a sum of revenue associated with each product in an order.
+    aggregate_type: sum
+
+  drink_revenue:
+    # Measure is defined in the 'order_item' dbt semantic model (models/marts/order_items.yml)
+    sql: CASE WHEN "IS_DRINK_ITEM" THEN "PRODUCT_PRICE" ELSE 0 END
+    description: The revenue generated for each order item. Revenue is calculated as
+      a sum of revenue associated with each product in an order.
+    aggregate_type: sum
+
+  median_revenue:
+    # Measure is defined in the 'order_item' dbt semantic model (models/marts/order_items.yml)
+    sql: '"PRODUCT_PRICE"'
+    description: The median revenue generated for each order item.
+    aggregate_type: median
 
 #The info below was pulled from your dbt repository and is read-only.
 dbt:
