@@ -9,6 +9,7 @@ dimensions:
   location_id:
     sql: '"LOCATION_ID"'
     format: ID
+    description: my location id
     primary_key: true
 
   location_name:
