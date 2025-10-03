@@ -1,1 +1,15 @@
-{}
+dynamic_schemas:
+  my_universal_schema_reference:
+    from_schema: DBT_SLEON_PROD
+    user_attribute: schema_id
+
+access_grants:
+  can_see_customer_one:
+    user_attribute: schema_id
+    allowed_values: [ DBT_SLEON ]
+  can_see_customer_two:
+    user_attribute: schema_id
+    allowed_values: [ DBT_SLEON_STG ]
+  can_see_customer_three:
+    user_attribute: schema_id
+    allowed_values: [ DBT_SLEON_PROD ]
