@@ -35,17 +35,17 @@ dimensions:
     #This description was pulled from dbt.
     description: The timestamp of a customer's most recent order.
 
-  lifetime_spend_pretax:
+  lifetime_spend_pretax_dim:
     sql: '"LIFETIME_SPEND_PRETAX"'
     #This description was pulled from dbt.
     description: The sum of all the pre-tax subtotals of every order a customer has placed.
 
-  lifetime_tax_paid:
+  lifetime_tax_paid_dim:
     sql: '"LIFETIME_TAX_PAID"'
     #This description was pulled from dbt.
     description: The sum of all the tax portion of every order a customer has placed.
 
-  lifetime_spend:
+  lifetime_spend_dim:
     sql: '"LIFETIME_SPEND"'
     #This description was pulled from dbt.
     description: The sum of all the order totals (including tax) that a customer has
@@ -59,6 +59,12 @@ dimensions:
     all_values: [ new, returning ]
 
 measures:
+  count_lifetime_orders:
+    # Measure is defined in the 'customers' dbt semantic model (models/marts/customers.yml)
+    sql: '"COUNT_LIFETIME_ORDERS"'
+    description: Total count of orders per customer.
+    aggregate_type: sum
+
   count:
     aggregate_type: count
 
@@ -67,12 +73,6 @@ measures:
     sql: '"CUSTOMER_ID"'
     description: Count of unique customers
     aggregate_type: count_distinct
-
-  count_lifetime_orders:
-    # Measure is defined in the 'customers' dbt semantic model (models/marts/customers.yml)
-    sql: '"COUNT_LIFETIME_ORDERS"'
-    description: Total count of orders per customer.
-    aggregate_type: sum
 
   lifetime_spend_pretax:
     # Measure is defined in the 'customers' dbt semantic model (models/marts/customers.yml)
