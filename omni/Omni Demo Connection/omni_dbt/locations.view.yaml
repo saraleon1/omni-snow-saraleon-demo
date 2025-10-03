@@ -17,6 +17,7 @@ dimensions:
 
   tax_rate:
     sql: '"TAX_RATE"'
+    description: tax rate
 
   opened_date:
     sql: '"OPENED_DATE"'
