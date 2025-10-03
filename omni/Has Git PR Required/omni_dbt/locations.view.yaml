@@ -1,0 +1,50 @@
+# Reference this view as omni_dbt__locations
+label: Locations
+schema_label: ""
+
+schema: omni_dbt
+table_name: LOCATIONS
+
+dimensions:
+  location_id:
+    sql: '"LOCATION_ID"'
+    format: ID
+    description: my location id
+    primary_key: true
+
+  location_name:
+    sql: '"LOCATION_NAME"'
+
+  tax_rate:
+    sql: '"TAX_RATE"'
+    description: tax rate
+
+  opened_date:
+    sql: '"OPENED_DATE"'
+
+measures:
+  count:
+    aggregate_type: count
+
+  average_tax_rate:
+    # Measure is defined in the 'locations' dbt semantic model (models/marts/locations.yml)
+    sql: '"TAX_RATE"'
+    description: Average tax rate.
+    aggregate_type: average
+
+#The info below was pulled from your dbt repository and is read-only.
+dbt:
+  name: locations
+  target_schema: dbt_sleon_prod
+  config:
+    materialized: table
+  code: |-
+    with
+
+    locations as (
+
+        select * from {{ ref('stg_locations') }}
+
+    )
+
+    select * from locations

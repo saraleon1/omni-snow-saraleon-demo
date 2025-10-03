@@ -1,0 +1,204 @@
+# Reference this view as omni_dbt__orders
+label: Orders
+schema_label: ""
+#This description was pulled from dbt.
+description: Order overview data mart, offering key details for each order
+  inlcluding if it's a customer's first order and a food vs. drink item
+  breakdown. One row per order.
+
+schema: omni_dbt
+table_name: ORDERS
+
+dimensions:
+  order_id:
+    sql: '"ORDER_ID"'
+    format: ID
+    #This description was pulled from dbt.
+    description: The unique key of the orders mart.
+    primary_key: true
+
+  location_id:
+    sql: '"LOCATION_ID"'
+    format: ID
+
+  customer_id:
+    sql: '"CUSTOMER_ID"'
+    format: ID
+    #This description was pulled from dbt.
+    description: The foreign key relating to the customer who placed the order.
+
+  subtotal_cents:
+    sql: '"SUBTOTAL_CENTS"'
+
+  tax_paid_cents:
+    sql: '"TAX_PAID_CENTS"'
+
+  order_total_cents:
+    sql: '"ORDER_TOTAL_CENTS"'
+
+  subtotal:
+    sql: '"SUBTOTAL"'
+
+  tax_paid:
+    sql: '"TAX_PAID"'
+
+  order_total:
+    sql: '"ORDER_TOTAL"'
+    #This description was pulled from dbt.
+    description: The total amount of the order in USD including tax.
+
+  ordered_at:
+    sql: '"ORDERED_AT"'
+    #This description was pulled from dbt.
+    description: The timestamp the order was placed at.
+
+  order_cost:
+    sql: '"ORDER_COST"'
+    #This description was pulled from dbt.
+    description: The sum of supply expenses to fulfill the order.
+
+  order_items_subtotal:
+    sql: '"ORDER_ITEMS_SUBTOTAL"'
+
+  count_food_items:
+    sql: '"COUNT_FOOD_ITEMS"'
+
+  count_drink_items:
+    sql: '"COUNT_DRINK_ITEMS"'
+
+  count_order_items:
+    sql: '"COUNT_ORDER_ITEMS"'
+
+  is_food_order:
+    sql: '"IS_FOOD_ORDER"'
+    #This description was pulled from dbt.
+    description: A boolean indicating if this order included any food items.
+
+  is_drink_order:
+    sql: '"IS_DRINK_ORDER"'
+    #This description was pulled from dbt.
+    description: A boolean indicating if this order included any drink items.
+
+  customer_order_number:
+    sql: '"CUSTOMER_ORDER_NUMBER"'
+
+  order_total_dim:
+    # Dimension is defined in the 'orders' dbt semantic model (models/marts/orders.yml)
+    sql: '"ORDER_TOTAL"'
+
+measures:
+  count:
+    aggregate_type: count
+
+  order_total:
+    # Measure is defined in the 'orders' dbt semantic model (models/marts/orders.yml)
+    sql: '"ORDER_TOTAL"'
+    description: The total amount for each order including taxes.
+    aggregate_type: sum
+
+  order_count:
+    # Measure is defined in the 'orders' dbt semantic model (models/marts/orders.yml)
+    sql: "1"
+    aggregate_type: sum
+
+  tax_paid:
+    # Measure is defined in the 'orders' dbt semantic model (models/marts/orders.yml)
+    sql: '"TAX_PAID"'
+    description: The total tax paid on each order.
+    aggregate_type: sum
+
+  order_cost:
+    # Measure is defined in the 'orders' dbt semantic model (models/marts/orders.yml)
+    sql: '"ORDER_COST"'
+    description: The cost for each order item. Cost is calculated as a sum of the
+      supply cost for each order item.
+    aggregate_type: sum
+
+#The info below was pulled from your dbt repository and is read-only.
+dbt:
+  name: orders
+  target_schema: dbt_sleon_prod
+  description: Order overview data mart, offering key details for each order
+    inlcluding if it's a customer's first order and a food vs. drink item
+    breakdown. One row per order.
+  config:
+    materialized: table
+  code: |-
+    with
+
+    orders as (
+
+        select * from {{ ref('stg_orders') }}
+
+    ),
+
+    order_items as (
+
+        select * from {{ ref('order_items') }}
+
+    ),
+
+    order_items_summary as (
+
+        select
+            order_id,
+
+            sum(supply_cost) as order_cost,
+            sum(product_price) as order_items_subtotal,
+            count(order_item_id) as count_order_items,
+            sum(
+                case
+                    when is_food_item then 1
+                    else 0
+                end
+            ) as count_food_items,
+            sum(
+                case
+                    when is_drink_item then 1
+                    else 0
+                end
+            ) as count_drink_items
+
+        from order_items
+
+        group by 1
+
+    ),
+
+    compute_booleans as (
+
+        select
+            orders.*,
+
+            order_items_summary.order_cost,
+            order_items_summary.order_items_subtotal,
+            order_items_summary.count_food_items,
+            order_items_summary.count_drink_items,
+            order_items_summary.count_order_items,
+            order_items_summary.count_food_items > 0 as is_food_order,
+            order_items_summary.count_drink_items > 0 as is_drink_order
+
+        from orders
+
+        left join
+            order_items_summary
+            on orders.order_id = order_items_summary.order_id
+
+    ),
+
+    customer_order_count as (
+
+        select
+            *,
+
+            row_number() over (
+                partition by customer_id
+                order by ordered_at asc
+            ) as customer_order_number
+
+        from compute_booleans
+
+    )
+
+    select * from customer_order_count
+  referenced_by: [ customers, fct_customers ]

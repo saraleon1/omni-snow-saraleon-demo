@@ -1,0 +1,90 @@
+# Reference this view as omni_dbt__stg_orders
+schema_label: ""
+#This description was pulled from dbt.
+description: Order data with basic cleaning and transformation applied, one row per order.
+
+schema: omni_dbt
+table_name: STG_ORDERS
+
+dimensions:
+  order_id:
+    sql: '"ORDER_ID"'
+    format: ID
+    #This description was pulled from dbt.
+    description: The unique key for each order.
+
+  location_id:
+    sql: '"LOCATION_ID"'
+    format: ID
+
+  customer_id:
+    sql: '"CUSTOMER_ID"'
+    format: ID
+
+  subtotal_cents:
+    sql: '"SUBTOTAL_CENTS"'
+
+  tax_paid_cents:
+    sql: '"TAX_PAID_CENTS"'
+
+  order_total_cents:
+    sql: '"ORDER_TOTAL_CENTS"'
+
+  subtotal:
+    sql: '"SUBTOTAL"'
+
+  tax_paid:
+    sql: '"TAX_PAID"'
+
+  order_total:
+    sql: '"ORDER_TOTAL"'
+
+  ordered_at:
+    sql: '"ORDERED_AT"'
+
+measures:
+  count:
+    aggregate_type: count
+
+#The info below was pulled from your dbt repository and is read-only.
+dbt:
+  name: stg_orders
+  target_schema: dbt_sleon_prod
+  description: Order data with basic cleaning and transformation applied, one row per order.
+  config:
+    materialized: view
+  code: |-
+    with
+
+    source as (
+
+        select * from {{ source('dbt_sleon', 'raw_orders') }}
+
+    ),
+
+    renamed as (
+
+        select
+
+            ----------  ids
+            id as order_id,
+            store_id as location_id,
+            customer as customer_id,
+
+            ---------- numerics
+            subtotal as subtotal_cents,
+            tax_paid as tax_paid_cents,
+            order_total as order_total_cents,
+            {{ cents_to_dollars('subtotal') }} as subtotal,
+            {{ cents_to_dollars('tax_paid') }} as tax_paid,
+            {{ cents_to_dollars('order_total') }} as order_total,
+
+            ---------- timestamps
+            {{ dbt.date_trunc('day','ordered_at') }} as ordered_at
+
+        from source
+
+    )
+
+    select * from renamed
+  referenced_by: [ orders, order_items ]
