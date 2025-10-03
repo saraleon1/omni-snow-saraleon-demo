@@ -9,6 +9,7 @@ dimensions:
   product_id:
     sql: '"PRODUCT_ID"'
     format: ID
+    primary_key: true
 
   product_name:
     sql: '"PRODUCT_NAME"'

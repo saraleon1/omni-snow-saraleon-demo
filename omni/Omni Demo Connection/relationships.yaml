@@ -1,1 +1,100 @@
-[]
+# Relationship is defined in the 'orders' dbt semantic model (models/marts/orders.yml)
+- join_from_view: omni_dbt__orders
+  join_to_view: omni_dbt__customers
+  join_type: always_left
+  on_sql: ${omni_dbt__orders.customer_id} = ${omni_dbt__customers.customer_id}
+  relationship_type: assumed_many_to_one
+
+- join_from_view: omni_dbt__fct_customers
+  join_to_view: omni_dbt__customers
+  join_type: always_left
+  on_sql: ${omni_dbt__fct_customers.customer_id} = ${omni_dbt__customers.customer_id}
+  relationship_type: assumed_many_to_one
+
+- join_from_view: omni_dbt__stg_customers
+  join_to_view: omni_dbt__customers
+  join_type: always_left
+  on_sql: ${omni_dbt__stg_customers.customer_id} = ${omni_dbt__customers.customer_id}
+  relationship_type: assumed_many_to_one
+
+- join_from_view: omni_dbt__stg_orders
+  join_to_view: omni_dbt__customers
+  join_type: always_left
+  on_sql: ${omni_dbt__stg_orders.customer_id} = ${omni_dbt__customers.customer_id}
+  relationship_type: assumed_many_to_one
+
+# Relationship is defined in the 'orders' dbt semantic model (models/marts/orders.yml)
+- join_from_view: omni_dbt__orders
+  join_to_view: omni_dbt__locations
+  join_type: always_left
+  on_sql: ${omni_dbt__orders.location_id} = ${omni_dbt__locations.location_id}
+  relationship_type: assumed_many_to_one
+
+- join_from_view: omni_dbt__stg_locations
+  join_to_view: omni_dbt__locations
+  join_type: always_left
+  on_sql: ${omni_dbt__stg_locations.location_id} = ${omni_dbt__locations.location_id}
+  relationship_type: assumed_many_to_one
+
+- join_from_view: omni_dbt__stg_orders
+  join_to_view: omni_dbt__locations
+  join_type: always_left
+  on_sql: ${omni_dbt__stg_orders.location_id} = ${omni_dbt__locations.location_id}
+  relationship_type: assumed_many_to_one
+
+# Relationship is defined in the 'order_item' dbt semantic model (models/marts/order_items.yml)
+- join_from_view: omni_dbt__order_items
+  join_to_view: omni_dbt__orders
+  join_type: always_left
+  on_sql: ${omni_dbt__order_items.order_id} = ${omni_dbt__orders.order_id}
+  relationship_type: assumed_many_to_one
+
+- join_from_view: omni_dbt__stg_orders
+  join_to_view: omni_dbt__orders
+  join_type: always_left
+  on_sql: ${omni_dbt__stg_orders.order_id} = ${omni_dbt__orders.order_id}
+  relationship_type: assumed_many_to_one
+
+- join_from_view: omni_dbt__stg_order_items
+  join_to_view: omni_dbt__orders
+  join_type: always_left
+  on_sql: ${omni_dbt__stg_order_items.order_id} = ${omni_dbt__orders.order_id}
+  relationship_type: assumed_many_to_one
+
+# Relationship is defined in the 'order_item' dbt semantic model (models/marts/order_items.yml)
+- join_from_view: omni_dbt__order_items
+  join_to_view: omni_dbt__products
+  join_type: always_left
+  on_sql: ${omni_dbt__order_items.product_id} = ${omni_dbt__products.product_id}
+  relationship_type: assumed_many_to_one
+
+- join_from_view: omni_dbt__stg_order_items
+  join_to_view: omni_dbt__order_items
+  join_type: always_left
+  on_sql: ${omni_dbt__stg_order_items.order_item_id} =
+    ${omni_dbt__order_items.order_item_id}
+  relationship_type: assumed_many_to_one
+
+- join_from_view: omni_dbt__stg_order_items
+  join_to_view: omni_dbt__products
+  join_type: always_left
+  on_sql: ${omni_dbt__stg_order_items.product_id} = ${omni_dbt__products.product_id}
+  relationship_type: assumed_many_to_one
+
+- join_from_view: omni_dbt__stg_products
+  join_to_view: omni_dbt__products
+  join_type: always_left
+  on_sql: ${omni_dbt__stg_products.product_id} = ${omni_dbt__products.product_id}
+  relationship_type: assumed_many_to_one
+
+- join_from_view: omni_dbt__stg_supplies
+  join_to_view: omni_dbt__products
+  join_type: always_left
+  on_sql: ${omni_dbt__stg_supplies.product_id} = ${omni_dbt__products.product_id}
+  relationship_type: assumed_many_to_one
+
+- join_from_view: omni_dbt__supplies
+  join_to_view: omni_dbt__products
+  join_type: always_left
+  on_sql: ${omni_dbt__supplies.product_id} = ${omni_dbt__products.product_id}
+  relationship_type: assumed_many_to_one

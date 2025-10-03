@@ -15,6 +15,7 @@ dimensions:
     format: ID
     #This description was pulled from dbt.
     description: The unique key of the orders mart.
+    primary_key: true
 
   location_id:
     sql: '"LOCATION_ID"'

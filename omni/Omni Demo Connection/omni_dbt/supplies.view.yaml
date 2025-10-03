@@ -8,6 +8,7 @@ table_name: SUPPLIES
 dimensions:
   supply_uuid:
     sql: '"SUPPLY_UUID"'
+    primary_key: true
 
   supply_id:
     sql: '"SUPPLY_ID"'

@@ -9,6 +9,7 @@ dimensions:
   order_item_id:
     sql: '"ORDER_ITEM_ID"'
     format: ID
+    primary_key: true
 
   order_id:
     sql: '"ORDER_ID"'
