@@ -1,0 +1,144 @@
+# Reference this view as my_universal_schema_reference__order_items
+label: Order Item
+schema_label: ""
+
+schema: my_universal_schema_reference
+table_name: ORDER_ITEMS
+
+dimensions:
+  order_item_id:
+    sql: '"ORDER_ITEM_ID"'
+    format: ID
+    primary_key: true
+
+  order_id:
+    sql: '"ORDER_ID"'
+    format: ID
+
+  product_id:
+    sql: '"PRODUCT_ID"'
+    format: ID
+
+  ordered_at:
+    sql: '"ORDERED_AT"'
+
+  product_name:
+    sql: '"PRODUCT_NAME"'
+
+  product_price:
+    sql: '"PRODUCT_PRICE"'
+
+  is_food_item:
+    sql: '"IS_FOOD_ITEM"'
+
+  is_drink_item:
+    sql: '"IS_DRINK_ITEM"'
+
+  supply_cost:
+    sql: '"SUPPLY_COST"'
+
+measures:
+  count:
+    aggregate_type: count
+
+  revenue:
+    # Measure is defined in the 'order_item' dbt semantic model (models/marts/order_items.yml)
+    sql: '"PRODUCT_PRICE"'
+    description: The revenue generated for each order item. Revenue is calculated as
+      a sum of revenue associated with each product in an order.
+    aggregate_type: sum
+
+  food_revenue:
+    # Measure is defined in the 'order_item' dbt semantic model (models/marts/order_items.yml)
+    sql: CASE WHEN "IS_FOOD_ITEM" THEN "PRODUCT_PRICE" ELSE 0 END
+    description: The revenue generated for each order item. Revenue is calculated as
+      a sum of revenue associated with each product in an order.
+    aggregate_type: sum
+
+  drink_revenue:
+    # Measure is defined in the 'order_item' dbt semantic model (models/marts/order_items.yml)
+    sql: CASE WHEN "IS_DRINK_ITEM" THEN "PRODUCT_PRICE" ELSE 0 END
+    description: The revenue generated for each order item. Revenue is calculated as
+      a sum of revenue associated with each product in an order.
+    aggregate_type: sum
+
+  median_revenue:
+    # Measure is defined in the 'order_item' dbt semantic model (models/marts/order_items.yml)
+    sql: '"PRODUCT_PRICE"'
+    description: The median revenue generated for each order item.
+    aggregate_type: median
+
+#The info below was pulled from your dbt repository and is read-only.
+dbt:
+  name: order_items
+  target_schema: dbt_sleon_prod
+  config:
+    materialized: table
+  code: |-
+    with
+
+    order_items as (
+
+        select * from {{ ref('stg_order_items') }}
+
+    ),
+
+
+    orders as (
+
+        select * from {{ ref('stg_orders') }}
+
+    ),
+
+    products as (
+
+        select * from {{ ref('stg_products') }}
+
+    ),
+
+    supplies as (
+
+        select * from {{ ref('stg_supplies') }}
+
+    ),
+
+    order_supplies_summary as (
+
+        select
+            product_id,
+
+            sum(supply_cost) as supply_cost
+
+        from supplies
+
+        group by 1
+
+    ),
+
+    joined as (
+
+        select
+            order_items.*,
+
+            orders.ordered_at,
+
+            products.product_name,
+            products.product_price,
+            products.is_food_item,
+            products.is_drink_item,
+
+            order_supplies_summary.supply_cost
+
+        from order_items
+
+        left join orders on order_items.order_id = orders.order_id
+
+        left join products on order_items.product_id = products.product_id
+
+        left join order_supplies_summary
+            on order_items.product_id = order_supplies_summary.product_id
+
+    )
+
+    select * from joined
+  referenced_by: [ orders ]

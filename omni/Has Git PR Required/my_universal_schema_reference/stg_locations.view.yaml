@@ -1,0 +1,68 @@
+# Reference this view as my_universal_schema_reference__stg_locations
+schema_label: ""
+#This description was pulled from dbt.
+description: List of open locations with basic cleaning and transformation
+  applied, one row per location.
+
+schema: my_universal_schema_reference
+table_name: STG_LOCATIONS
+
+dimensions:
+  location_id:
+    sql: '"LOCATION_ID"'
+    format: ID
+    #This description was pulled from dbt.
+    description: The unique key for each location.
+
+  location_name:
+    sql: '"LOCATION_NAME"'
+
+  tax_rate:
+    sql: '"TAX_RATE"'
+
+  opened_date:
+    sql: '"OPENED_DATE"'
+
+measures:
+  count:
+    aggregate_type: count
+
+#The info below was pulled from your dbt repository and is read-only.
+dbt:
+  name: stg_locations
+  target_schema: dbt_sleon_prod
+  description: List of open locations with basic cleaning and transformation
+    applied, one row per location.
+  config:
+    materialized: view
+  code: |-
+    with
+
+    source as (
+
+        select * from {{ source('dbt_sleon', 'raw_stores') }}
+
+    ),
+
+    renamed as (
+
+        select
+
+            ----------  ids
+            id as location_id,
+
+            ---------- text
+            name as location_name,
+
+            ---------- numerics
+            tax_rate,
+
+            ---------- timestamps
+            {{ dbt.date_trunc('day', 'opened_at') }} as opened_date
+
+        from source
+
+    )
+
+    select * from renamed
+  referenced_by: [ locations ]

@@ -1,0 +1,24 @@
+# Reference this view as my_universal_schema_reference__stg_foo
+schema_label: ""
+
+schema: my_universal_schema_reference
+table_name: STG_FOO
+
+dimensions:
+  mycol: {}
+
+measures:
+  count:
+    aggregate_type: count
+
+#The info below was pulled from your dbt repository and is read-only.
+dbt:
+  name: stg_foo
+  target_schema: dbt_sleon_prod
+  config:
+    materialized: view
+  code: "select 1 as \"mycol\"\r
+
+    union\r
+
+    select 2 as \"mycol\""
