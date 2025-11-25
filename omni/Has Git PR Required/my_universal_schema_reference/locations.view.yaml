@@ -20,13 +20,18 @@ dimensions:
   opened_date:
     sql: '"OPENED_DATE"'
 
+  _entity_location:
+    # Entity is defined in the 'locations' dbt semantic model (models/marts/locations.yml)
+    sql: ${my_universal_schema_reference__locations.location_id}
+    hidden: true
+
 measures:
   count:
     aggregate_type: count
 
   average_tax_rate:
     # Measure is defined in the 'locations' dbt semantic model (models/marts/locations.yml)
-    sql: '"TAX_RATE"'
+    sql: ${my_universal_schema_reference__locations.tax_rate}
     description: Average tax rate.
     aggregate_type: average
 

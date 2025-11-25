@@ -1,0 +1,33 @@
+# Reference this view as my_universal_schema_reference__my_second_dbt_model
+schema_label: ""
+#This description was pulled from dbt.
+description: A starter dbt model
+
+schema: my_universal_schema_reference
+table_name: MY_SECOND_DBT_MODEL
+
+dimensions:
+  id:
+    sql: '"ID"'
+    format: ID
+    #This description was pulled from dbt.
+    description: The primary key for this table
+    primary_key: true
+
+measures:
+  count:
+    aggregate_type: count
+
+#The info below was pulled from your dbt repository and is read-only.
+dbt:
+  name: my_second_dbt_model
+  target_schema: dbt_sleon_prod
+  description: A starter dbt model
+  config:
+    materialized: table
+  code: |-
+    -- Use the `ref` function to select from other models
+
+    select *
+    from {{ ref('my_first_dbt_model') }}
+    where id = 1

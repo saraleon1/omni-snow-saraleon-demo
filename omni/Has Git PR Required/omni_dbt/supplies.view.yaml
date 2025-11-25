@@ -27,6 +27,11 @@ dimensions:
   is_perishable_supply:
     sql: '"IS_PERISHABLE_SUPPLY"'
 
+  _entity_supply:
+    # Entity is defined in the 'supplies' dbt semantic model (models/marts/supplies.yml)
+    sql: ${omni_dbt__supplies.supply_uuid}
+    hidden: true
+
 measures:
   count:
     aggregate_type: count

@@ -59,11 +59,17 @@ dimensions:
       ordered more than once or has only placed their first order to date.
     all_values: [ new, returning ]
 
+  _entity_customer:
+    # Entity is defined in the 'customers' dbt semantic model (models/marts/customers.yml)
+    sql: ${omni_dbt__customers.customer_id}
+    hidden: true
+
 measures:
   count_lifetime_orders:
     # Measure is defined in the 'customers' dbt semantic model (models/marts/customers.yml)
-    sql: '"COUNT_LIFETIME_ORDERS"'
-    description: Total count of orders per customer.
+    sql: ${omni_dbt__customers.count_lifetime_orders}
+    label: Count Lifetime Orders
+    description: Count of lifetime orders
     aggregate_type: sum
 
   count:
@@ -71,19 +77,20 @@ measures:
 
   customers:
     # Measure is defined in the 'customers' dbt semantic model (models/marts/customers.yml)
-    sql: '"CUSTOMER_ID"'
+    sql: ${omni_dbt__customers.customer_id}
     description: Count of unique customers
     aggregate_type: count_distinct
 
   lifetime_spend_pretax:
     # Measure is defined in the 'customers' dbt semantic model (models/marts/customers.yml)
-    sql: '"LIFETIME_SPEND_PRETAX"'
-    description: Customer lifetime spend before taxes.
+    sql: ${omni_dbt__customers.lifetime_spend_pretax}
+    label: LTV Pre-tax
+    description: Customer's lifetime spend before tax
     aggregate_type: sum
 
   lifetime_spend:
     # Measure is defined in the 'customers' dbt semantic model (models/marts/customers.yml)
-    sql: '"LIFETIME_SPEND"'
+    sql: ${omni_dbt__customers.lifetime_spend}
     description: Gross customer lifetime spend inclusive of taxes.
     aggregate_type: sum
 

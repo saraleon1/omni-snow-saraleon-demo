@@ -2,8 +2,8 @@
 - join_from_view: my_universal_schema_reference__orders
   join_to_view: my_universal_schema_reference__customers
   join_type: always_left
-  on_sql: ${my_universal_schema_reference__orders.customer_id} =
-    ${my_universal_schema_reference__customers.customer_id}
+  on_sql: ${my_universal_schema_reference__orders._entity_customer} =
+    ${my_universal_schema_reference__customers._entity_customer}
   relationship_type: assumed_many_to_one
 
 - join_from_view: my_universal_schema_reference__stg_customers
@@ -24,8 +24,8 @@
 - join_from_view: my_universal_schema_reference__orders
   join_to_view: my_universal_schema_reference__locations
   join_type: always_left
-  on_sql: ${my_universal_schema_reference__orders.location_id} =
-    ${my_universal_schema_reference__locations.location_id}
+  on_sql: ${my_universal_schema_reference__orders._entity_location} =
+    ${my_universal_schema_reference__locations._entity_location}
   relationship_type: assumed_many_to_one
 
 - join_from_view: my_universal_schema_reference__stg_locations
@@ -46,8 +46,8 @@
 - join_from_view: my_universal_schema_reference__order_items
   join_to_view: my_universal_schema_reference__orders
   join_type: always_left
-  on_sql: ${my_universal_schema_reference__order_items.order_id} =
-    ${my_universal_schema_reference__orders.order_id}
+  on_sql: ${my_universal_schema_reference__order_items._entity_order_id} =
+    ${my_universal_schema_reference__orders._entity_order_id}
   relationship_type: assumed_many_to_one
 
 - join_from_view: my_universal_schema_reference__stg_orders
@@ -68,8 +68,8 @@
 - join_from_view: my_universal_schema_reference__order_items
   join_to_view: my_universal_schema_reference__products
   join_type: always_left
-  on_sql: ${my_universal_schema_reference__order_items.product_id} =
-    ${my_universal_schema_reference__products.product_id}
+  on_sql: ${my_universal_schema_reference__order_items._entity_product} =
+    ${my_universal_schema_reference__products._entity_product}
   relationship_type: assumed_many_to_one
 
 - join_from_view: my_universal_schema_reference__stg_order_items
@@ -111,7 +111,8 @@
 - join_from_view: omni_dbt__orders
   join_to_view: omni_dbt__customers
   join_type: always_left
-  on_sql: ${omni_dbt__orders.customer_id} = ${omni_dbt__customers.customer_id}
+  on_sql: ${omni_dbt__orders._entity_customer} =
+    ${omni_dbt__customers._entity_customer}
   relationship_type: assumed_many_to_one
 
 - join_from_view: omni_dbt__stg_customers
@@ -130,7 +131,8 @@
 - join_from_view: omni_dbt__orders
   join_to_view: omni_dbt__locations
   join_type: always_left
-  on_sql: ${omni_dbt__orders.location_id} = ${omni_dbt__locations.location_id}
+  on_sql: ${omni_dbt__orders._entity_location} =
+    ${omni_dbt__locations._entity_location}
   relationship_type: assumed_many_to_one
 
 - join_from_view: omni_dbt__stg_locations
@@ -149,7 +151,8 @@
 - join_from_view: omni_dbt__order_items
   join_to_view: omni_dbt__orders
   join_type: always_left
-  on_sql: ${omni_dbt__order_items.order_id} = ${omni_dbt__orders.order_id}
+  on_sql: ${omni_dbt__order_items._entity_order_id} =
+    ${omni_dbt__orders._entity_order_id}
   relationship_type: assumed_many_to_one
 
 - join_from_view: omni_dbt__stg_orders
@@ -168,7 +171,8 @@
 - join_from_view: omni_dbt__order_items
   join_to_view: omni_dbt__products
   join_type: always_left
-  on_sql: ${omni_dbt__order_items.product_id} = ${omni_dbt__products.product_id}
+  on_sql: ${omni_dbt__order_items._entity_product} =
+    ${omni_dbt__products._entity_product}
   relationship_type: assumed_many_to_one
 
 - join_from_view: omni_dbt__stg_order_items

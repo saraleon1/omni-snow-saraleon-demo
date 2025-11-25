@@ -1,0 +1,55 @@
+# Reference this view as my_universal_schema_reference__my_first_dbt_model
+schema_label: ""
+#This description was pulled from dbt.
+description: A starter dbt model
+
+schema: my_universal_schema_reference
+table_name: MY_FIRST_DBT_MODEL
+
+dimensions:
+  id:
+    sql: '"ID"'
+    format: ID
+    #This description was pulled from dbt.
+    description: The primary key for this table
+    primary_key: true
+
+measures:
+  count:
+    aggregate_type: count
+
+#The info below was pulled from your dbt repository and is read-only.
+dbt:
+  name: my_first_dbt_model
+  target_schema: dbt_sleon_prod
+  description: A starter dbt model
+  config:
+    materialized: table
+  code: |-
+    /*
+        Welcome to your first dbt model!
+        Did you know that you can also configure models directly within SQL files?
+        This will override configurations stated in dbt_project.yml
+
+        Try changing "table" to "view" below
+    */
+
+    {{ config(materialized='table') }}
+
+    with source_data as (
+
+        select 1 as id
+        union all
+        select null as id
+
+    )
+
+    select *
+    from source_data
+
+    /*
+        Uncomment the line below to remove records with null `id` values
+    */
+
+    -- where id is not null
+  referenced_by: [ my_second_dbt_model ]

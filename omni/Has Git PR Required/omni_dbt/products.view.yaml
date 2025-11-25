@@ -29,6 +29,11 @@ dimensions:
   is_drink_item:
     sql: '"IS_DRINK_ITEM"'
 
+  _entity_product:
+    # Entity is defined in the 'products' dbt semantic model (models/marts/products.yml)
+    sql: ${omni_dbt__products.product_id}
+    hidden: true
+
 measures:
   count:
     aggregate_type: count

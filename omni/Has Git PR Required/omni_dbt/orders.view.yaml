@@ -84,16 +84,32 @@ dimensions:
 
   order_total_dim:
     # Dimension is defined in the 'orders' dbt semantic model (models/marts/orders.yml)
-    sql: '"ORDER_TOTAL"'
+    sql: ${omni_dbt__orders.order_total}
+
+  _entity_order_id:
+    # Entity is defined in the 'orders' dbt semantic model (models/marts/orders.yml)
+    sql: ${omni_dbt__orders.order_id}
+    hidden: true
+
+  _entity_location:
+    # Entity is defined in the 'orders' dbt semantic model (models/marts/orders.yml)
+    sql: ${omni_dbt__orders.location_id}
+    hidden: true
+
+  _entity_customer:
+    # Entity is defined in the 'orders' dbt semantic model (models/marts/orders.yml)
+    sql: ${omni_dbt__orders.customer_id}
+    hidden: true
 
 measures:
   count:
     aggregate_type: count
 
   order_total:
-    # Measure is defined in the 'orders' dbt semantic model (models/marts/orders.yml)
-    sql: '"ORDER_TOTAL"'
-    description: The total amount for each order including taxes.
+    # Measure is defined by the 'order_total' dbt metric (models/marts/orders.yml)
+    sql: ${omni_dbt__orders.order_total}
+    label: Order Total
+    description: Sum of total order amonunt. Includes tax + revenue.
     aggregate_type: sum
 
   order_count:
@@ -103,15 +119,22 @@ measures:
 
   tax_paid:
     # Measure is defined in the 'orders' dbt semantic model (models/marts/orders.yml)
-    sql: '"TAX_PAID"'
+    sql: ${omni_dbt__orders.tax_paid}
     description: The total tax paid on each order.
     aggregate_type: sum
 
   order_cost:
-    # Measure is defined in the 'orders' dbt semantic model (models/marts/orders.yml)
-    sql: '"ORDER_COST"'
-    description: The cost for each order item. Cost is calculated as a sum of the
-      supply cost for each order item.
+    # Measure is defined by the 'order_cost' dbt metric (models/marts/order_items.yml)
+    sql: ${omni_dbt__orders.order_cost}
+    label: Order Cost
+    description: Sum of cost for each order item.
+    aggregate_type: sum
+
+  orders:
+    # Measure is defined by the 'orders' dbt metric (models/marts/orders.yml)
+    sql: "1"
+    label: Orders
+    description: Count of orders.
     aggregate_type: sum
 
 #The info below was pulled from your dbt repository and is read-only.

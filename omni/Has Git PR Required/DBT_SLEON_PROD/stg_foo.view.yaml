@@ -15,8 +15,7 @@ dbt:
   target_schema: dbt_sleon_prod
   config:
     materialized: view
-  code: "select 1 as \"mycol\"\r
-
-    union\r
-
-    select 2 as \"mycol\""
+  code: |-
+    select 1 as "mycol"
+    union
+    select 2 as "mycol"
