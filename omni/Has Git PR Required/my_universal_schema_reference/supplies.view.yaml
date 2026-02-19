@@ -1,5 +1,4 @@
 # Reference this view as my_universal_schema_reference__supplies
-label: Supplies
 schema_label: ""
 
 schema: my_universal_schema_reference
@@ -8,7 +7,6 @@ table_name: SUPPLIES
 dimensions:
   supply_uuid:
     sql: '"SUPPLY_UUID"'
-    primary_key: true
 
   supply_id:
     sql: '"SUPPLY_ID"'
@@ -26,11 +24,6 @@ dimensions:
 
   is_perishable_supply:
     sql: '"IS_PERISHABLE_SUPPLY"'
-
-  _entity_supply:
-    # Entity is defined in the 'supplies' dbt semantic model (models/marts/supplies.yml)
-    sql: ${my_universal_schema_reference__supplies.supply_uuid}
-    hidden: true
 
 measures:
   count:

@@ -1,0 +1,23 @@
+# Reference this view as omni_dbt__example
+schema_label: ""
+
+schema: omni_dbt
+table_name: EXAMPLE
+
+dimensions:
+  id:
+    sql: '"ID"'
+    format: ID
+    primary_key: true
+
+measures:
+  count:
+    aggregate_type: count
+
+#The info below was pulled from your dbt repository and is read-only.
+dbt:
+  name: example
+  target_schema: dbt_sleon_prod
+  config:
+    materialized: table
+  code: select 1 as id

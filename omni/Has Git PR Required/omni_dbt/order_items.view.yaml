@@ -1,5 +1,4 @@
 # Reference this view as omni_dbt__order_items
-label: Order Item
 schema_label: ""
 
 schema: omni_dbt
@@ -9,7 +8,6 @@ dimensions:
   order_item_id:
     sql: '"ORDER_ITEM_ID"'
     format: ID
-    primary_key: true
 
   order_id:
     sql: '"ORDER_ID"'
@@ -37,68 +35,9 @@ dimensions:
   supply_cost:
     sql: '"SUPPLY_COST"'
 
-  _entity_order_item:
-    # Entity is defined in the 'order_item' dbt semantic model (models/marts/order_items.yml)
-    sql: ${omni_dbt__order_items.order_item_id}
-    hidden: true
-
-  _entity_order_id:
-    # Entity is defined in the 'order_item' dbt semantic model (models/marts/order_items.yml)
-    sql: ${omni_dbt__order_items.order_id}
-    hidden: true
-
-  _entity_product:
-    # Entity is defined in the 'order_item' dbt semantic model (models/marts/order_items.yml)
-    sql: ${omni_dbt__order_items.product_id}
-    hidden: true
-
 measures:
   count:
     aggregate_type: count
-
-  revenue:
-    # Measure is defined by the 'revenue' dbt metric (models/marts/order_items.yml)
-    sql: ${omni_dbt__order_items.product_price}
-    label: Revenue
-    description: Sum of the product revenue for each order item. Excludes tax.
-    aggregate_type: sum
-
-  food_revenue:
-    # Measure is defined by the 'food_revenue' dbt metric (models/marts/order_items.yml)
-    sql: CASE WHEN ${omni_dbt__order_items.is_food_item} THEN
-      ${omni_dbt__order_items.product_price} ELSE 0 END
-    label: Food Revenue
-    description: The revenue from food in each order
-    aggregate_type: sum
-
-  drink_revenue:
-    # Measure is defined by the 'drink_revenue' dbt metric (models/marts/order_items.yml)
-    sql: CASE WHEN ${omni_dbt__order_items.is_drink_item} THEN
-      ${omni_dbt__order_items.product_price} ELSE 0 END
-    label: Drink Revenue
-    description: The revenue from drinks in each order
-    aggregate_type: sum
-
-  median_revenue:
-    # Measure is defined by the 'median_revenue' dbt metric (models/marts/order_items.yml)
-    sql: ${omni_dbt__order_items.product_price}
-    label: Median Revenue
-    description: The median revenue for each order item. Excludes tax.
-    aggregate_type: median
-
-  food_revenue_pct:
-    # Measure is defined by the 'food_revenue_pct' dbt metric (models/marts/order_items.yml)
-    sql: CAST(${omni_dbt__order_items.food_revenue} AS DOUBLE) /
-      CAST(${omni_dbt__order_items.revenue} AS DOUBLE)
-    label: Food Revenue %
-    description: The % of order revenue from food.
-
-  drink_revenue_pct:
-    # Measure is defined by the 'drink_revenue_pct' dbt metric (models/marts/order_items.yml)
-    sql: CAST(${omni_dbt__order_items.drink_revenue} AS DOUBLE) /
-      CAST(${omni_dbt__order_items.revenue} AS DOUBLE)
-    label: Drink Revenue %
-    description: The % of order revenue from drinks.
 
 #The info below was pulled from your dbt repository and is read-only.
 dbt:

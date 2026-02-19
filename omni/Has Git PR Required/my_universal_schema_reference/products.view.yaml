@@ -1,5 +1,4 @@
 # Reference this view as my_universal_schema_reference__products
-label: Products
 schema_label: ""
 
 schema: my_universal_schema_reference
@@ -9,7 +8,6 @@ dimensions:
   product_id:
     sql: '"PRODUCT_ID"'
     format: ID
-    primary_key: true
 
   product_name:
     sql: '"PRODUCT_NAME"'
@@ -28,11 +26,6 @@ dimensions:
 
   is_drink_item:
     sql: '"IS_DRINK_ITEM"'
-
-  _entity_product:
-    # Entity is defined in the 'products' dbt semantic model (models/marts/products.yml)
-    sql: ${my_universal_schema_reference__products.product_id}
-    hidden: true
 
 measures:
   count:

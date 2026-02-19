@@ -1,5 +1,4 @@
 # Reference this view as omni_dbt__orders
-label: Orders
 schema_label: ""
 #This description was pulled from dbt.
 description: Order overview data mart, offering key details for each order
@@ -15,7 +14,6 @@ dimensions:
     format: ID
     #This description was pulled from dbt.
     description: The unique key of the orders mart.
-    primary_key: true
 
   location_id:
     sql: '"LOCATION_ID"'
@@ -82,60 +80,9 @@ dimensions:
   customer_order_number:
     sql: '"CUSTOMER_ORDER_NUMBER"'
 
-  order_total_dim:
-    # Dimension is defined in the 'orders' dbt semantic model (models/marts/orders.yml)
-    sql: ${omni_dbt__orders.order_total}
-
-  _entity_order_id:
-    # Entity is defined in the 'orders' dbt semantic model (models/marts/orders.yml)
-    sql: ${omni_dbt__orders.order_id}
-    hidden: true
-
-  _entity_location:
-    # Entity is defined in the 'orders' dbt semantic model (models/marts/orders.yml)
-    sql: ${omni_dbt__orders.location_id}
-    hidden: true
-
-  _entity_customer:
-    # Entity is defined in the 'orders' dbt semantic model (models/marts/orders.yml)
-    sql: ${omni_dbt__orders.customer_id}
-    hidden: true
-
 measures:
   count:
     aggregate_type: count
-
-  order_total:
-    # Measure is defined by the 'order_total' dbt metric (models/marts/orders.yml)
-    sql: ${omni_dbt__orders.order_total}
-    label: Order Total
-    description: Sum of total order amonunt. Includes tax + revenue.
-    aggregate_type: sum
-
-  order_count:
-    # Measure is defined in the 'orders' dbt semantic model (models/marts/orders.yml)
-    sql: "1"
-    aggregate_type: sum
-
-  tax_paid:
-    # Measure is defined in the 'orders' dbt semantic model (models/marts/orders.yml)
-    sql: ${omni_dbt__orders.tax_paid}
-    description: The total tax paid on each order.
-    aggregate_type: sum
-
-  order_cost:
-    # Measure is defined by the 'order_cost' dbt metric (models/marts/order_items.yml)
-    sql: ${omni_dbt__orders.order_cost}
-    label: Order Cost
-    description: Sum of cost for each order item.
-    aggregate_type: sum
-
-  orders:
-    # Measure is defined by the 'orders' dbt metric (models/marts/orders.yml)
-    sql: "1"
-    label: Orders
-    description: Count of orders.
-    aggregate_type: sum
 
 #The info below was pulled from your dbt repository and is read-only.
 dbt:
@@ -224,4 +171,4 @@ dbt:
     )
 
     select * from customer_order_count
-  referenced_by: [ customers, fct_customers, fact_customers ]
+  referenced_by: [ customers, fct_customers ]
