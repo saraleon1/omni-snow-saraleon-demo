@@ -1,0 +1,5 @@
+# Reference this view as dbt_sleon__orders
+measures:
+  order_cost_sum:
+    sql: ${dbt_sleon__orders.order_cost}
+    aggregate_type: sum
