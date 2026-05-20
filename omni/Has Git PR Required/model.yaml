@@ -1,4 +1,4 @@
-ai_context: foo
+ai_context: foobar
 
 dynamic_schemas:
   my_universal_schema_reference:
