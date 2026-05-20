@@ -37,7 +37,6 @@ jobs:
           path: .omni-content-validator/
 
       - name: Run content validator
-        continue-on-error: true
         env:
           OMNI_API_KEY: ${{ secrets.OMNI_API_KEY }}
           # OMNI_BASE_URL, OMNI_MODEL_ID come from .omni-content-validator.yml (checked in)
@@ -45,6 +44,7 @@ jobs:
         run: |
           omni-content-validator \
             --branch-name "${{ github.head_ref || github.ref_name }}" \
+            --fail-on-new-only
 
 
       - name: Upload history artifact
