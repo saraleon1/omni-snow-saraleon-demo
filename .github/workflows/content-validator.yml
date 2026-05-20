@@ -44,7 +44,7 @@ jobs:
         run: |
           omni-content-validator \
             --branch-name "${{ github.head_ref || github.ref_name }}" \
-            --fail-on-new-only
+
 
       - name: Upload history artifact
         if: always()
