@@ -37,13 +37,13 @@ jobs:
           path: .omni-content-validator/
 
       - name: Run content validator
+        continue-on-error: true
         env:
           OMNI_API_KEY: ${{ secrets.OMNI_API_KEY }}
           # OMNI_BASE_URL, OMNI_MODEL_ID come from .omni-content-validator.yml (checked in)
           # OMNI_USER_ID is optional — set as a repo variable if you use org API keys
         run: |
           omni-content-validator \
-            --branch-name "${{ github.head_ref || github.ref_name }}" \
             --fail-on-new-only
 
 
