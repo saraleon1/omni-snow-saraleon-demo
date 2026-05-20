@@ -1,3 +1,5 @@
+ai_context: foo
+
 dynamic_schemas:
   my_universal_schema_reference:
     from_schema: DBT_SLEON_PROD
