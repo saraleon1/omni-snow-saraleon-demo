@@ -25,7 +25,7 @@ jobs:
           python-version: "3.12"
 
       - name: Install omnicles
-        run: pip install omnicles
+        run: pip install git+http://github.com/ernestoongaro/omnicles.git
 
       # Download history artifact from main so the run can diff new vs existing failures.
       # On the very first run this won't exist yet — that's fine, omnicles handles it gracefully.
