@@ -1,0 +1,107 @@
+name: Dismiss Stale Approvals
+
+# Fires whenever main advances (a PR merges) OR whenever a PR is updated.
+# In both cases we check whether any open PR's approved files now overlap
+# with changes that have landed on main since that PR was last approved.
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    types: [synchronize, reopened]
+
+jobs:
+  dismiss-stale-approvals:
+    runs-on: ubuntu-latest
+    permissions:
+      pull-requests: write   # dismiss reviews
+      contents: read
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0   # full history needed for git diff
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: pip install PyGithub requests
+
+      - name: Dismiss stale approvals
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          REPO: ${{ github.repository }}
+          # When triggered by a push to main, check ALL open PRs.
+          # When triggered by a PR sync, only check that PR.
+          TARGET_PR: ${{ github.event.pull_request.number || '' }}
+        run: |
+          python - <<'EOF'
+          import os, subprocess, json
+          from github import Github
+
+          gh = Github(os.environ["GH_TOKEN"])
+          repo = gh.get_repo(os.environ["REPO"])
+          target_pr = os.environ.get("TARGET_PR", "").strip()
+
+          # Which PRs to check?
+          if target_pr:
+              prs = [repo.get_pull(int(target_pr))]
+          else:
+              prs = list(repo.get_pulls(state="open", base="main"))
+
+          for pr in prs:
+              reviews = list(pr.get_reviews())
+              # Find the most recent approval per reviewer
+              approvals = {}
+              for r in reviews:
+                  if r.state == "APPROVED":
+                      approvals[r.user.login] = r
+                  elif r.state in ("DISMISSED", "CHANGES_REQUESTED"):
+                      approvals.pop(r.user.login, None)
+
+              if not approvals:
+                  continue
+
+              # Oldest approval timestamp across all current approvers
+              import datetime
+              oldest_approval_ts = min(
+                  r.submitted_at for r in approvals.values()
+              ).isoformat() + "Z"
+
+              # Files changed on main since the oldest approval
+              result = subprocess.run(
+                  ["git", "log", f"--after={oldest_approval_ts}",
+                   "--name-only", "--pretty=format:", "origin/main"],
+                  capture_output=True, text=True
+              )
+              main_files = set(f for f in result.stdout.splitlines() if f.strip())
+
+              # Files changed in this PR
+              pr_files = set(f.filename for f in pr.get_files())
+
+              overlap = main_files & pr_files
+
+              if overlap:
+                  overlap_list = "\n".join(f"- `{f}`" for f in sorted(overlap))
+                  reason = (
+                      f"main has advanced and now overlaps with this PR on:\n\n"
+                      f"{overlap_list}\n\n"
+                      f"Please re-review to confirm the net change is still correct."
+                  )
+                  for reviewer, review in approvals.items():
+                      try:
+                          pr.create_review(
+                              body=reason,
+                              event="COMMENT",
+                          )
+                          # Dismiss via the review dismissal endpoint
+                          review.dismiss(reason[:255])  # API caps at 255 chars
+                          print(f"Dismissed approval by {reviewer} on PR #{pr.number} — overlap: {overlap}")
+                      except Exception as e:
+                          print(f"Could not dismiss {reviewer} on PR #{pr.number}: {e}")
+          EOF
