@@ -1,0 +1,55 @@
+name: Omni Content Validator
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write   # post PR comments
+      checks: write          # create check runs
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install omnicles
+        run: pip install omnicles
+
+      # Download history artifact from main so the run can diff new vs existing failures.
+      # On the very first run this won't exist yet — that's fine, omnicles handles it gracefully.
+      - name: Download history artifact
+        uses: actions/download-artifact@v4
+        continue-on-error: true
+        with:
+          name: omni-content-validator-history
+          path: .omni-content-validator/
+
+      - name: Run content validator
+        env:
+          OMNI_API_KEY: ${{ secrets.OMNI_API_KEY }}
+          # OMNI_BASE_URL, OMNI_MODEL_ID come from .omni-content-validator.yml (checked in)
+          # OMNI_USER_ID is optional — set as a repo variable if you use org API keys
+        run: |
+          omni-content-validator \
+            --branch-name "${{ github.head_ref || github.ref_name }}" \
+            --fail-on-new-only
+
+      - name: Upload history artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: omni-content-validator-history
+          path: .omni-content-validator/
+          retention-days: 90
