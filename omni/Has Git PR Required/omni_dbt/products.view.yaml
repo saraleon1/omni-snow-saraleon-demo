@@ -47,3 +47,4 @@ dbt:
     )
 
     select * from products
+  referenced_by: [ order_items ]
