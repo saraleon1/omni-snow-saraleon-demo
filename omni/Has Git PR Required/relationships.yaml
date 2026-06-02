@@ -1,1 +1,28 @@
-[]
+- join_from_view: my_universal_schema_reference__orders
+  join_to_view: my_universal_schema_reference__customers
+  join_type: always_left
+  on_sql: ${my_universal_schema_reference__orders.customer_id} =
+    ${my_universal_schema_reference__customers.customer_id}
+  relationship_type: many_to_one
+
+- join_from_view: my_universal_schema_reference__orders
+  join_to_view: my_universal_schema_reference__order_items
+  join_type: always_left
+  on_sql: ${my_universal_schema_reference__orders.order_id} =
+    ${my_universal_schema_reference__order_items.order_id}
+  relationship_type: one_to_many
+  reversible: true
+
+- join_from_view: my_universal_schema_reference__orders
+  join_to_view: my_universal_schema_reference__locations
+  join_type: always_left
+  on_sql: ${my_universal_schema_reference__orders.location_id} =
+    ${my_universal_schema_reference__locations.location_id}
+  relationship_type: many_to_one
+
+- join_from_view: my_universal_schema_reference__order_items
+  join_to_view: my_universal_schema_reference__products
+  join_type: always_left
+  on_sql: ${my_universal_schema_reference__order_items.product_id} =
+    ${my_universal_schema_reference__products.product_id}
+  relationship_type: many_to_one

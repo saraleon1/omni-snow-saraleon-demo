@@ -1,0 +1,10 @@
+base_view: my_universal_schema_reference__orders
+label: Orders
+description: Explore order data including order totals, items, products,
+  customers, and locations. One row per order.
+
+joins:
+  my_universal_schema_reference__customers: {}
+  my_universal_schema_reference__order_items:
+    my_universal_schema_reference__products: {}
+  my_universal_schema_reference__locations: {}
