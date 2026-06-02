@@ -72,6 +72,7 @@ dimensions:
     sql: '"IS_FOOD_ORDER"'
     #This description was pulled from dbt.
     description: A boolean indicating if this order included any food items.
+    ai_context: my different context
 
   is_drink_order:
     sql: '"IS_DRINK_ORDER"'
