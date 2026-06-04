@@ -85,6 +85,13 @@ measures:
   count:
     aggregate_type: count
 
+  orders_count_is_food_item_true_1:
+    label: Orders Count Is Food Item true
+    aggregate_type: count
+    filters:
+      my_universal_schema_reference__order_items.is_food_item:
+        is: true
+
 #The info below was pulled from your dbt repository and is read-only.
 dbt:
   name: orders
