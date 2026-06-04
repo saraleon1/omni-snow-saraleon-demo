@@ -82,8 +82,13 @@ dimensions:
     sql: '"CUSTOMER_ORDER_NUMBER"'
 
 measures:
-  count:
+  food_orders_count:
+    label: Brooklyn Orders Count
+    format: NUMBER_0
     aggregate_type: count
+    filters:
+      my_universal_schema_reference__locations.location_name:
+        is: Brooklyn
 
 #The info below was pulled from your dbt repository and is read-only.
 dbt:
