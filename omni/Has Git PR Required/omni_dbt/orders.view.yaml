@@ -12,7 +12,7 @@ dimensions:
   order_id:
     sql: '"ORDER_ID"'
     format: ID
-    description: The unique key of the orders mart. Yet another change
+    description: The unique key of the orders mart.
     primary_key: true
 
   location_id:
