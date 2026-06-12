@@ -12,8 +12,7 @@ dimensions:
   order_id:
     sql: '"ORDER_ID"'
     format: ID
-    #This description was pulled from dbt.
-    description: The unique key of the orders mart.
+    description: The unique key of the orders mart. my new change
     primary_key: true
 
   location_id:
