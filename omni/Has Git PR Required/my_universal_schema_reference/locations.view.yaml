@@ -18,6 +18,9 @@ dimensions:
   opened_date:
     sql: '"OPENED_DATE"'
 
+  test_col:
+    sql: '"TEST_COL"'
+
 measures:
   count:
     aggregate_type: count
@@ -37,4 +40,5 @@ dbt:
 
     )
 
-    select * from locations
+    select *,
+    1 as test_col from locations
