@@ -6,6 +6,7 @@ dimensions:
   id:
     sql: '"ID"'
     format: ID
+    description: something
     primary_key: true
 
 measures:
