@@ -76,4 +76,4 @@ dbt:
     )
 
     select * from renamed
-  referenced_by: [ supplies, order_items ]
+  referenced_by: [ order_items, supplies ]

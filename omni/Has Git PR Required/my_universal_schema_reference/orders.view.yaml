@@ -1,4 +1,5 @@
 # Reference this view as my_universal_schema_reference__orders
+label: Orders
 schema_label: ""
 #This description was pulled from dbt.
 description: Order overview data mart, offering key details for each order
@@ -81,9 +82,104 @@ dimensions:
   customer_order_number:
     sql: '"CUSTOMER_ORDER_NUMBER"'
 
+  order_total_dim:
+    # Dimension is defined in the 'orders' dbt semantic model (models/marts/orders.yml)
+    sql: ${my_universal_schema_reference__orders.order_total}
+
+  _entity_order_id:
+    # Entity is defined in the 'orders' dbt semantic model (models/marts/orders.yml)
+    sql: ${my_universal_schema_reference__orders.order_id}
+    hidden: true
+
+  _entity_location:
+    # Entity is defined in the 'orders' dbt semantic model (models/marts/orders.yml)
+    sql: ${my_universal_schema_reference__orders.location_id}
+    hidden: true
+
+  _entity_customer:
+    # Entity is defined in the 'orders' dbt semantic model (models/marts/orders.yml)
+    sql: ${my_universal_schema_reference__orders.customer_id}
+    hidden: true
+
+  _filter_new_customer_orders:
+    # Produced by the dbt semantic layer integration
+    sql: ${my_universal_schema_reference__orders.customer_order_number} = 1
+    description: Intermediate filter dimension for measure new_customer_orders
+    hidden: true
+
+  _filter_large_orders:
+    # Produced by the dbt semantic layer integration
+    sql: ${my_universal_schema_reference__orders.order_total_dim} >= 20
+    description: Intermediate filter dimension for measure large_orders
+    hidden: true
+
+  _filter_food_orders:
+    # Produced by the dbt semantic layer integration
+    sql: ${my_universal_schema_reference__orders.is_food_order} = TRUE
+    description: Intermediate filter dimension for measure food_orders
+    hidden: true
+
+  _filter_drink_orders:
+    # Produced by the dbt semantic layer integration
+    sql: ${my_universal_schema_reference__orders.is_drink_order} = TRUE
+    description: Intermediate filter dimension for measure drink_orders
+    hidden: true
+
 measures:
   count:
     aggregate_type: count
+
+  order_count:
+    # Measure is defined in the 'orders' dbt semantic model (models/marts/orders.yml)
+    sql: "1"
+    aggregate_type: sum
+
+  new_customer_orders:
+    # Measure is defined by the 'new_customer_orders' dbt metric (models/marts/orders.yml)
+    sql: "1"
+    label: New Customers
+    description: New customer's first order count
+    aggregate_type: sum
+    filters:
+      _filter_new_customer_orders:
+        is: true
+
+  large_orders:
+    # Measure is defined by the 'large_orders' dbt metric (models/marts/orders.yml)
+    sql: "1"
+    label: Large Orders
+    description: Count of orders with order total over 20.
+    aggregate_type: sum
+    filters:
+      _filter_large_orders:
+        is: true
+
+  orders:
+    # Measure is defined by the 'orders' dbt metric (models/marts/orders.yml)
+    sql: "1"
+    label: Orders
+    description: Count of orders.
+    aggregate_type: sum
+
+  food_orders:
+    # Measure is defined by the 'food_orders' dbt metric (models/marts/orders.yml)
+    sql: "1"
+    label: Food Orders
+    description: Count of orders that contain food order items
+    aggregate_type: sum
+    filters:
+      _filter_food_orders:
+        is: true
+
+  drink_orders:
+    # Measure is defined by the 'drink_orders' dbt metric (models/marts/orders.yml)
+    sql: "1"
+    label: Drink Orders
+    description: Count of orders that contain drink order items
+    aggregate_type: sum
+    filters:
+      _filter_drink_orders:
+        is: true
 
 #The info below was pulled from your dbt repository and is read-only.
 dbt:
