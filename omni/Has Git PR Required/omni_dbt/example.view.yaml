@@ -8,6 +8,7 @@ dimensions:
   id:
     sql: '"ID"'
     format: ID
+    description: my description
     primary_key: true
 
 measures:
