@@ -11,9 +11,6 @@ dimensions:
     format: ID
     primary_key: true
 
-  product_name:
-    sql: '"PRODUCT_NAME"'
-
   product_type:
     sql: '"PRODUCT_TYPE"'
 
