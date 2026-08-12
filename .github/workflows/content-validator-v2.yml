@@ -1,10 +1,15 @@
-name: Omni Content Validator
+name: Omni Content Validator V2
 on:
   push:
     branches:
       - main
   pull_request:
   workflow_dispatch:
+    inputs:
+      seed_history:
+        description: "Seed history (skip --fail-on-new-only). Run this once on main to bootstrap the artifact."
+        type: boolean
+        default: false
 jobs:
   validate:
     runs-on: ubuntu-latest
@@ -62,8 +67,13 @@ jobs:
           # OMNI_BASE_URL, OMNI_MODEL_ID come from .omni-content-validator.yml (checked in)
           # OMNI_USER_ID is optional — set as a repo variable if you use org API keys
         run: |
-          omni-content-validator \
-            --fail-on-new-only
+          if [[ "${{ inputs.seed_history }}" == "true" ]]; then
+            echo "Seeding history — running without --fail-on-new-only"
+            omni-content-validator
+          else
+            omni-content-validator \
+              --fail-on-new-only
+          fi
 
       - name: Upload history artifact
         if: always()
@@ -71,4 +81,5 @@ jobs:
         with:
           name: omni-content-validator-history
           path: .omni-content-validator/
+          overwrite: true
           retention-days: 90
