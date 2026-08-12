@@ -1,0 +1,74 @@
+name: Omni Content Validator
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+  workflow_dispatch:
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write   # post PR comments
+      checks: write          # create check runs
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install omnicles
+        run: pip install git+https://github.com/ernestoongaro/omnicles.git@0.3.0
+
+      # Find the last successful run on main so we can download its history artifact.
+      # On the very first run there will be no prior run — outputs an empty string,
+      # and the download step below will gracefully no-op via continue-on-error.
+      - name: Find last successful main run
+        id: last-run
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const runs = await github.rest.actions.listWorkflowRuns({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              workflow_id: 'content-validator.yml',
+              branch: 'main',
+              status: 'success',
+              per_page: 1,
+            });
+            const id = runs.data.workflow_runs[0]?.id;
+            core.setOutput('run-id', id ?? '');
+
+      # Download history artifact from the last successful main run so omnicles
+      # can diff new vs existing failures. On the very first run (or if main has
+      # never succeeded) this won't find anything — continue-on-error handles it.
+      - name: Download history artifact
+        uses: actions/download-artifact@v4
+        continue-on-error: true
+        with:
+          name: omni-content-validator-history
+          path: .omni-content-validator/
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          run-id: ${{ steps.last-run.outputs.run-id }}
+
+      - name: Run content validator
+        continue-on-error: true
+        env:
+          OMNI_API_KEY: ${{ secrets.OMNI_API_KEY }}
+          # OMNI_BASE_URL, OMNI_MODEL_ID come from .omni-content-validator.yml (checked in)
+          # OMNI_USER_ID is optional — set as a repo variable if you use org API keys
+        run: |
+          omni-content-validator \
+            --fail-on-new-only
+
+      - name: Upload history artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: omni-content-validator-history
+          path: .omni-content-validator/
+          retention-days: 90
