@@ -3,6 +3,8 @@ label: Food Orders
 description: Explore order data including order totals, items, products,
   customers, and locations. One row per order.
 
+fields: [ all_views.*, -my_universal_schema_reference__locations.location_name ]
+
 joins:
   my_universal_schema_reference__customers: {}
   my_universal_schema_reference__order_items:
