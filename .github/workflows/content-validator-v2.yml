@@ -34,7 +34,7 @@ jobs:
           python-version: "3.12"
 
       - name: Install omnicles
-        run: pip install git+https://github.com/saraleon1/omnicles.git@patch-1
+        run: pip install git+https://github.com/ernestoongaro/omnicles.git
 
       - name: Find previous history artifact
         id: history
@@ -123,7 +123,6 @@ jobs:
             const fs = require('fs');
             const owner = context.repo.owner;
             const repo = context.repo.repo;
-            const sha = context.payload.pull_request ? context.payload.pull_request.head.sha : context.sha;
 
             let report = null;
             let reportMissing = false;
@@ -143,7 +142,6 @@ jobs:
               };
             }
 
-            const conclusion = reportMissing || report.total_issues > 0 ? 'failure' : 'success';
             const baseUrl = report.base_url
               ? (report.base_url.endsWith('/') ? report.base_url.slice(0, -1) : report.base_url)
               : null;
@@ -190,7 +188,10 @@ jobs:
               }).join('\n');
             };
 
+            console.log('Event:', context.eventName, 'PR:', !!context.payload.pull_request);
+
             if (!context.payload.pull_request) {
+              console.log('No pull_request in payload, skipping comment');
               return;
             }
 
