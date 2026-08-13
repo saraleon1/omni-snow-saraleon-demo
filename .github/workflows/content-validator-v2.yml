@@ -51,7 +51,7 @@ jobs:
               repo,
               workflow_id: workflowFile,
               branch: defaultBranch,
-              status: 'success',
+              status: 'completed',
               per_page: 5,
             });
 
