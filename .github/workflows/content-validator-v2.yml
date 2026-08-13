@@ -34,7 +34,7 @@ jobs:
           python-version: "3.12"
 
       - name: Install omnicles
-        run: pip install git+https://github.com/ernestoongaro/omnicles.git
+        run: pip install git+https://github.com/saraleon1/omnicles.git@patch-1
 
       - name: Find previous history artifact
         id: history
