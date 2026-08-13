@@ -1,4 +1,4 @@
-name: Omni Content Validator
+name: Omni Content Validator v2
 on:
   push:
     branches: [main]
@@ -86,6 +86,15 @@ jobs:
       - name: Ensure history directory exists
         run: mkdir -p .omni-content-validator
 
+      - name: Resolve branch name
+        id: branch
+        run: |
+          if [ "${{ github.event_name }}" = "pull_request" ]; then
+            echo "name=${{ github.head_ref }}" >> "$GITHUB_OUTPUT"
+          else
+            echo "name=${{ github.ref_name }}" >> "$GITHUB_OUTPUT"
+          fi
+
       - name: Run content validator
         id: validator
         run: |
@@ -93,6 +102,7 @@ jobs:
             --history-in .omni-content-validator/history.json \
             --history-out .omni-content-validator/history.json \
             --report-out .omni-content-validator/report.json \
+            --branch-name "${{ steps.branch.outputs.name }}" \
             --fail-on-new-only
 
       - name: Upload history artifact
