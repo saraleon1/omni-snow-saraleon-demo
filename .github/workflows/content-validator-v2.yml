@@ -1,4 +1,4 @@
-name: Omni Content Validator V2
+name: Omni Content Validator
 on:
   push:
     branches:
@@ -40,7 +40,7 @@ jobs:
             const runs = await github.rest.actions.listWorkflowRuns({
               owner: context.repo.owner,
               repo: context.repo.repo,
-              workflow_id: 'content-validator.yml',
+              workflow_id: 'content-validator-v2.yml',
               branch: 'main',
               status: 'success',
               per_page: 1,
@@ -60,6 +60,9 @@ jobs:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           run-id: ${{ steps.last-run.outputs.run-id }}
 
+      - name: Ensure history directory exists
+        run: mkdir -p .omni-content-validator
+
       - name: Run content validator
         continue-on-error: true
         env:
@@ -69,7 +72,7 @@ jobs:
         run: |
           if [[ "${{ inputs.seed_history }}" == "true" ]]; then
             echo "Seeding history — running without --fail-on-new-only"
-            omni-content-validator
+            omni-content-validator || true
           else
             omni-content-validator \
               --fail-on-new-only
