@@ -14,9 +14,6 @@ dimensions:
   product_name:
     sql: '"PRODUCT_NAME"'
 
-  product_type:
-    sql: '"PRODUCT_TYPE"'
-
   product_description:
     sql: '"PRODUCT_DESCRIPTION"'
 
