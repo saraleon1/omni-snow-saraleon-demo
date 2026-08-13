@@ -11,9 +11,6 @@ dimensions:
     format: ID
     primary_key: true
 
-  location_name:
-    sql: '"LOCATION_NAME"'
-
   tax_rate:
     sql: '"TAX_RATE"'
 
