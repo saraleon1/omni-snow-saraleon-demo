@@ -13,7 +13,7 @@ dimensions:
 
   product_name:
     sql: '"PRODUCT_NAME"'
-    ai_context: change
+    ai_context: change and another
 
   product_type:
     sql: '"PRODUCT_TYPE"'
