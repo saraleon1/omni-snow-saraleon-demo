@@ -16,6 +16,7 @@ dimensions:
 
   product_type:
     sql: '"PRODUCT_TYPE"'
+    ai_context: test
 
   product_description:
     sql: '"PRODUCT_DESCRIPTION"'
