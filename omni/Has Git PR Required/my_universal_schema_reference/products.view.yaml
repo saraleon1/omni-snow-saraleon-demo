@@ -15,9 +15,6 @@ dimensions:
     sql: '"PRODUCT_NAME"'
     ai_context: change
 
-  product_type:
-    sql: '"PRODUCT_TYPE"'
-
   product_description:
     sql: '"PRODUCT_DESCRIPTION"'
 
