@@ -12,8 +12,7 @@ dimensions:
   customer_id:
     sql: '"CUSTOMER_ID"'
     format: ID
-    #This description was pulled from dbt.
-    description: The unique key of the orders mart.
+    description: The unique key of the orders mart. some change
     primary_key: true
 
   customer_name:

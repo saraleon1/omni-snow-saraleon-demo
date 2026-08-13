@@ -10,6 +10,7 @@ dimensions:
     sql: '"PRODUCT_ID"'
     format: ID
     primary_key: true
+    ai_context: test a change one more time and again and again
 
   product_name:
     sql: '"PRODUCT_NAME"'
