@@ -12,9 +12,6 @@ dimensions:
     primary_key: true
     ai_context: test a change again
 
-  product_name:
-    sql: '"PRODUCT_NAME"'
-
   product_type:
     sql: '"PRODUCT_TYPE"'
 
