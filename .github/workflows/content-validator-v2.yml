@@ -1,4 +1,4 @@
-name: Omni Content Validator v2
+name: Omni Content Validator
 on:
   push:
     branches: [main]
