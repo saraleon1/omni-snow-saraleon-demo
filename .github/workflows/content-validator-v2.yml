@@ -1,25 +1,32 @@
 name: Omni Content Validator
 on:
   push:
-    branches:
-      - main
+    branches: [main]
   pull_request:
   workflow_dispatch:
-    inputs:
-      seed_history:
-        description: "Seed history (skip --fail-on-new-only). Run this once on main to bootstrap the artifact."
-        type: boolean
-        default: false
+
+permissions:
+  actions: read
+  checks: write
+  contents: read
+  pull-requests: write
+
 jobs:
-  validate:
+  validate-content:
     runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      pull-requests: write   # post PR comments
-      checks: write          # create check runs
+    env:
+      OMNI_API_KEY: ${{ secrets.OMNI_API_KEY }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+
+      - name: Check validator config
+        run: |
+          if [ ! -f .omni-content-validator.yml ]; then
+            echo "Missing .omni-content-validator.yml in the repo root."
+            echo "Copy .omni-content-validator.example.yml to get started."
+            exit 1
+          fi
 
       - name: Set up Python
         uses: actions/setup-python@v5
@@ -29,60 +36,191 @@ jobs:
       - name: Install omnicles
         run: pip install git+https://github.com/ernestoongaro/omnicles.git@0.3.0
 
-      # Find the last successful run on main so we can download its history artifact.
-      # On the very first run there will be no prior run — outputs an empty string,
-      # and the download step below will gracefully no-op via continue-on-error.
-      - name: Find last successful main run
-        id: last-run
+      - name: Find previous history artifact
+        id: history
         uses: actions/github-script@v7
         with:
           script: |
-            const runs = await github.rest.actions.listWorkflowRuns({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              workflow_id: 'content-validator-v2.yml',
-              branch: 'main',
-              status: 'success',
-              per_page: 1,
-            });
-            const id = runs.data.workflow_runs[0]?.id;
-            core.setOutput('run-id', id ?? '');
+            const owner = context.repo.owner;
+            const repo = context.repo.repo;
+            const workflowFile = 'content-validator-v2.yml';
+            const defaultBranch = context.payload.repository.default_branch;
 
-      # Download history artifact from the last successful main run so omnicles
-      # can diff new vs existing failures. On the very first run (or if main has
-      # never succeeded) this won't find anything — continue-on-error handles it.
+            const runs = await github.rest.actions.listWorkflowRuns({
+              owner,
+              repo,
+              workflow_id: workflowFile,
+              branch: defaultBranch,
+              status: 'success',
+              per_page: 5,
+            });
+
+            for (const run of runs.data.workflow_runs) {
+              const artifacts = await github.rest.actions.listWorkflowRunArtifacts({
+                owner,
+                repo,
+                run_id: run.id,
+              });
+
+              const match = artifacts.data.artifacts.find(
+                (a) => a.name === 'content-validator-history' && !a.expired,
+              );
+
+              if (match) {
+                core.setOutput('run_id', run.id.toString());
+                return;
+              }
+            }
+
+            core.setOutput('run_id', '');
+
       - name: Download history artifact
+        if: steps.history.outputs.run_id != ''
         uses: actions/download-artifact@v4
-        continue-on-error: true
         with:
-          name: omni-content-validator-history
-          path: .omni-content-validator/
+          name: content-validator-history
+          run-id: ${{ steps.history.outputs.run_id }}
+          path: .omni-content-validator
           github-token: ${{ secrets.GITHUB_TOKEN }}
-          run-id: ${{ steps.last-run.outputs.run-id }}
 
       - name: Ensure history directory exists
         run: mkdir -p .omni-content-validator
 
       - name: Run content validator
-        continue-on-error: true
-        env:
-          OMNI_API_KEY: ${{ secrets.OMNI_API_KEY }}
-          # OMNI_BASE_URL, OMNI_MODEL_ID come from .omni-content-validator.yml (checked in)
-          # OMNI_USER_ID is optional — set as a repo variable if you use org API keys
+        id: validator
         run: |
-          if [[ "${{ inputs.seed_history }}" == "true" ]]; then
-            echo "Seeding history — running without --fail-on-new-only"
-            omni-content-validator || true
-          else
-            omni-content-validator \
-              --fail-on-new-only
-          fi
+          omni-content-validator \
+            --history-in .omni-content-validator/history.json \
+            --history-out .omni-content-validator/history.json \
+            --report-out .omni-content-validator/report.json \
+            --fail-on-new-only
 
       - name: Upload history artifact
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: omni-content-validator-history
-          path: .omni-content-validator/
+          name: content-validator-history
+          path: .omni-content-validator/history.json
+          if-no-files-found: ignore
           overwrite: true
           retention-days: 90
+
+      - name: Report check and PR comment
+        if: always()
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const owner = context.repo.owner;
+            const repo = context.repo.repo;
+            const sha = context.payload.pull_request ? context.payload.pull_request.head.sha : context.sha;
+
+            let report = null;
+            let reportMissing = false;
+            try {
+              report = JSON.parse(fs.readFileSync('.omni-content-validator/report.json', 'utf8'));
+            } catch (error) {
+              reportMissing = true;
+              report = {
+                total_issues: 0,
+                new_issues: 0,
+                existing_issues: 0,
+                resolved_issues: 0,
+                include_personal_folders: false,
+                new_issue_samples: [],
+                existing_issue_samples: [],
+                resolved_issue_samples: [],
+              };
+            }
+
+            const conclusion = reportMissing || report.total_issues > 0 ? 'failure' : 'success';
+            const baseUrl = report.base_url
+              ? (report.base_url.endsWith('/') ? report.base_url.slice(0, -1) : report.base_url)
+              : null;
+            const modelUrl = baseUrl && report.model_id
+              ? `${baseUrl}/models/${report.model_id}/ide`
+              : null;
+            const summary = [
+              `Total issues: ${report.total_issues}`,
+              `New issues: ${report.new_issues}`,
+              `Existing issues: ${report.existing_issues}`,
+              `Resolved issues: ${report.resolved_issues}`,
+              report.include_personal_folders ? 'Scope: includes personal folders' : null,
+              modelUrl ? `Model: ${modelUrl}` : null,
+              reportMissing ? 'Report missing: validator did not produce output.' : null,
+            ].filter(Boolean).join('\n');
+
+            const escapeMarkdownLinkText = (value) => String(value)
+              .replace(/\\/g, '\\\\')
+              .replace(/\[/g, '\\[')
+              .replace(/\]/g, '\\]');
+
+            const formatList = (items) => {
+              if (!items || items.length === 0) return '_None_';
+              return items.map((item) => {
+                const raw = item.raw || {};
+                const docName = raw.document_name || raw.name || 'Unknown document';
+                const queryName = raw.query_name || null;
+                const issueType = raw.issue_type || null;
+                const documentUrl = typeof raw.document_url === 'string'
+                  ? raw.document_url
+                  : (typeof raw.url === 'string' ? raw.url : null);
+                const docLabel = documentUrl
+                  ? `[${escapeMarkdownLinkText(docName)}](${documentUrl})`
+                  : docName;
+                const headerParts = [docLabel];
+                if (queryName) {
+                  headerParts.push(queryName);
+                } else if (issueType) {
+                  headerParts.push(issueType);
+                }
+                const header = headerParts.join(' / ');
+                const message = raw.message || item.summary || 'No details';
+                return `- ${header}\n\n\`\`\`\n${message}\n\`\`\``;
+              }).join('\n');
+            };
+
+            if (!context.payload.pull_request) {
+              return;
+            }
+
+            const marker = '<!-- omni-content-validator -->';
+            const body = [
+              marker,
+              '## Content Validator',
+              '',
+              summary,
+              '',
+              '**New issues**',
+              formatList(report.new_issue_samples),
+              '',
+              '**Existing issues**',
+              formatList(report.existing_issue_samples),
+              '',
+              '**Resolved issues**',
+              formatList(report.resolved_issue_samples),
+            ].join('\n');
+
+            const { data: comments } = await github.rest.issues.listComments({
+              owner,
+              repo,
+              issue_number: context.payload.pull_request.number,
+              per_page: 100,
+            });
+
+            const existing = comments.find((c) => c.body && c.body.includes(marker));
+            if (existing) {
+              await github.rest.issues.updateComment({
+                owner,
+                repo,
+                comment_id: existing.id,
+                body,
+              });
+            } else {
+              await github.rest.issues.createComment({
+                owner,
+                repo,
+                issue_number: context.payload.pull_request.number,
+                body,
+              });
+            }
