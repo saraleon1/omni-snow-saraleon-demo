@@ -1,0 +1,73 @@
+name: Sync AI Context to Omni
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'context/docs/**'
+
+jobs:
+  sync-context:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install Omni tools
+        run: npm install -g @omni-co/model-local-editor
+
+      - name: Detect changed context files
+        id: changes
+        run: |
+          CHANGED=$(git diff --name-only HEAD~1 HEAD -- 'context/consumption/docs/*.md')
+          if [ -z "$CHANGED" ]; then
+            echo "skip=true" >> $GITHUB_OUTPUT
+          else
+            echo "skip=false" >> $GITHUB_OUTPUT
+            echo "$CHANGED" > /tmp/changed-files.txt
+          fi
+
+      - name: Create Omni branch and pull model
+        if: steps.changes.outputs.skip == 'false'
+        env:
+          OMNI_API_KEY: ${{ secrets.OMNI_API_KEY }}
+          OMNI_BASE_URL: ${{ secrets.OMNI_BASE_URL }}
+        run: |
+          BRANCH="ai-context-sync-$(date +%Y%m%d-%H%M%S)"
+          echo "BRANCH=$BRANCH" >> $GITHUB_ENV
+          mkdir -p /tmp/omni-model
+          omni-sync init ${{ secrets.OMNI_MODEL_ID }} \
+            --branch "$BRANCH" \
+            --create-branch \
+            --dir /tmp/omni-model
+
+      - name: Update ai_context in model YAML
+        if: steps.changes.outputs.skip == 'false'
+        run: |
+          bash scripts/update-ai-context.sh /tmp/changed-files.txt /tmp/omni-model
+
+      - name: Push changes to Omni
+        if: steps.changes.outputs.skip == 'false'
+        env:
+          OMNI_API_KEY: ${{ secrets.OMNI_API_KEY }}
+          OMNI_BASE_URL: ${{ secrets.OMNI_BASE_URL }}
+        run: |
+          timeout 30 omni-sync start ${{ secrets.OMNI_MODEL_ID }} \
+            --dir /tmp/omni-model \
+            --branch "$BRANCH" || true
+
+      - name: Notify Slack
+        if: steps.changes.outputs.skip == 'false' && vars.SLACK_WEBHOOK_URL != ''
+        run: |
+          curl -X POST "${{ secrets.SLACK_WEBHOOK_URL }}" \
+            -H 'Content-Type: application/json' \
+            -d "{\"text\":\"🧠 AI context update on branch \`$BRANCH\` — review in Omni.\"}"
