@@ -142,6 +142,9 @@ write_ai_context() {
     } > "$tmp_file"
     mv "$tmp_file" "$yaml_file"
   fi
+
+  # Touch to trigger file watcher
+  touch "$yaml_file"
 }
 
 # ──────────────────────────────────────────────────────────────────
