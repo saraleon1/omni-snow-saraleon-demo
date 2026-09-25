@@ -12,4 +12,4 @@ All order revenue uses `product_price` from the order items table.
 
 ## What NOT to use
 
-Do not use `stg_order_items` or `stg_products` for reporting — those are staging tables. Always use the production `dbt_sleon_prod` views. some change
+Do not use `stg_order_items` or `stg_products` for reporting — those are staging tables. Always use the production `dbt_sleon_prod` views. some change another change
