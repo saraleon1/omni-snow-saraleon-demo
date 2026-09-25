@@ -28,7 +28,7 @@ jobs:
       - name: Detect changed context files
         id: changes
         run: |
-          CHANGED=$(git diff --name-only HEAD~1 HEAD -- 'context/consumption/docs/*.md')
+          CHANGED=$(git diff --name-only HEAD~1 HEAD -- 'context/docs/*.md')
           if [ -z "$CHANGED" ]; then
             echo "skip=true" >> $GITHUB_OUTPUT
           else
