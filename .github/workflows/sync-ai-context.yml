@@ -50,20 +50,29 @@ jobs:
             --create-branch \
             --dir /tmp/omni-model
 
-      - name: Update ai_context in model YAML
-        if: steps.changes.outputs.skip == 'false'
-        run: |
-          bash scripts/update-ai-context.sh /tmp/changed-files.txt /tmp/omni-model
-
-      - name: Push changes to Omni
+      - name: Sync changes to Omni
         if: steps.changes.outputs.skip == 'false'
         env:
           OMNI_API_KEY: ${{ secrets.OMNI_API_KEY }}
           OMNI_BASE_URL: ${{ secrets.OMNI_BASE_URL }}
         run: |
-          timeout 30 omni-sync start ${{ secrets.OMNI_MODEL_ID }} \
+          # Start omni-sync in background — it watches for file changes
+          omni-sync start ${{ secrets.OMNI_MODEL_ID }} \
             --dir /tmp/omni-model \
-            --branch "$BRANCH" || true
+            --branch "$BRANCH" &
+          SYNC_PID=$!
+
+          # Wait for file watcher to be ready
+          sleep 10
+
+          # NOW make the edits — watcher detects saves and pushes to Omni
+          bash scripts/update-ai-context.sh /tmp/changed-files.txt /tmp/omni-model
+
+          # Give it time to sync the changes
+          sleep 15
+
+          # Clean up
+          kill $SYNC_PID || true
 
       - name: Notify Slack
         if: steps.changes.outputs.skip == 'false' && vars.SLACK_WEBHOOK_URL != ''
