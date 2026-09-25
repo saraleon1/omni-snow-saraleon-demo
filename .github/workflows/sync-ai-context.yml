@@ -56,20 +56,43 @@ jobs:
           OMNI_API_KEY: ${{ secrets.OMNI_API_KEY }}
           OMNI_BASE_URL: ${{ secrets.OMNI_BASE_URL }}
         run: |
-          # Start omni-sync in background — it watches for file changes
+          # Start omni-sync in background
           omni-sync start ${{ secrets.OMNI_MODEL_ID }} \
             --dir /tmp/omni-model \
-            --branch "$BRANCH" &
+            --branch "$BRANCH" > /tmp/sync-log.txt 2>&1 &
           SYNC_PID=$!
 
           # Wait for file watcher to be ready
-          sleep 10
+          echo "Waiting for file watcher..."
+          for i in $(seq 1 30); do
+            if grep -q "File watcher ready" /tmp/sync-log.txt 2>/dev/null; then
+              echo "File watcher ready after ${i}s"
+              break
+            fi
+            sleep 1
+          done
 
-          # NOW make the edits — watcher detects saves and pushes to Omni
+          # Debug: show what's in the model dir
+          echo "Topic files found:"
+          find /tmp/omni-model -name '*.topic*' -type f
+          echo ""
+
+          # Debug: show all files
+          echo "All files in model dir:"
+          ls -la /tmp/omni-model/
+          echo ""
+
+          # Run the update script
+          echo "Running update script..."
           bash scripts/update-ai-context.sh /tmp/changed-files.txt /tmp/omni-model
 
-          # Give it time to sync the changes
-          sleep 15
+          # Give watcher time to detect and push
+          echo "Waiting for sync..."
+          sleep 20
+
+          # Debug: show sync log
+          echo "Sync log:"
+          cat /tmp/sync-log.txt
 
           # Clean up
           kill $SYNC_PID || true
