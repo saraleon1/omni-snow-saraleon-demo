@@ -40,7 +40,7 @@ dimensions:
     sql: '"SUBTOTAL"'
 
   tax_paid:
-    sql: '"TAX_PAID"'
+    sql: '"TAX_PAID" * 12'
 
   order_total:
     sql: '"ORDER_TOTAL"'
