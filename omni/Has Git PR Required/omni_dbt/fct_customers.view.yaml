@@ -11,6 +11,7 @@ dimensions:
 
   customer_name:
     sql: '"CUSTOMER_NAME"'
+    description: something new
 
   count_lifetime_orders:
     sql: '"COUNT_LIFETIME_ORDERS"'
