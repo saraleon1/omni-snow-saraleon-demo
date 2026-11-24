@@ -1,0 +1,1037 @@
+{
+  "abilities": {
+    "canAnalyze": true,
+    "canDownload": true,
+    "canDrill": true,
+    "canDuplicate": true,
+    "canRequestAccess": true,
+    "canSaveSpreadsheets": true,
+    "canSchedule": true,
+    "canUpload": true,
+    "canUseDashboardAi": false,
+    "canUseTimezoneOverride": false,
+    "canViewWorkbook": false,
+    "gitMode": "REQUIRE_PULL_REQUEST",
+    "requirePullRequestToPublish": true
+  },
+  "containers": [
+    {
+      "container": {
+        "children": [
+          {
+            "content": "# Sales Overview",
+            "gridPosition": {
+              "h": 12,
+              "w": 24,
+              "x": 0,
+              "y": 0
+            },
+            "instanceKey": "01M8726B9JPGSQB9XR5C0TGSZP",
+            "padding": [
+              3,
+              3,
+              3,
+              3
+            ],
+            "type": "inline-text"
+          },
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "as": "chart",
+                    "id": "1",
+                    "instanceKey": "01M8726B9J6M4X45W4HVCDRXPX",
+                    "type": "query"
+                  }
+                ],
+                "containerType": "stack",
+                "gridPosition": {
+                  "h": 18,
+                  "w": 8,
+                  "x": 0,
+                  "y": 0
+                },
+                "instanceKey": "01M8726B9JRSF4VMZAVHVJ8J02",
+                "metadata": {
+                  "attachedQueryKey": "1"
+                },
+                "name": "Total Revenue",
+                "style": "tile"
+              },
+              {
+                "children": [
+                  {
+                    "as": "chart",
+                    "id": "2",
+                    "instanceKey": "01M8726B9JZKDWMXX5D504KF36",
+                    "type": "query"
+                  }
+                ],
+                "containerType": "stack",
+                "gridPosition": {
+                  "h": 18,
+                  "w": 8,
+                  "x": 8,
+                  "y": 0
+                },
+                "instanceKey": "01M8726B9JKBWFTHQQM800DB7T",
+                "metadata": {
+                  "attachedQueryKey": "2"
+                },
+                "name": "Total Orders",
+                "style": "tile"
+              },
+              {
+                "children": [
+                  {
+                    "as": "chart",
+                    "id": "3",
+                    "instanceKey": "01M8726B9JBESTJTXNYZ39R9GK",
+                    "type": "query"
+                  }
+                ],
+                "containerType": "stack",
+                "gridPosition": {
+                  "h": 18,
+                  "w": 8,
+                  "x": 16,
+                  "y": 0
+                },
+                "instanceKey": "01M8726B9JKMM2CPNZ3FJB2X9A",
+                "metadata": {
+                  "attachedQueryKey": "3"
+                },
+                "name": "Total Customers",
+                "style": "tile"
+              }
+            ],
+            "containerType": "grid",
+            "gridPosition": {
+              "h": 20,
+              "w": 24,
+              "x": 0,
+              "y": 12
+            },
+            "instanceKey": "01M8726B9J6NYWKNBT4FRH5VFZ",
+            "name": "KPIs",
+            "style": "none"
+          },
+          {
+            "children": [
+              {
+                "as": "metadata",
+                "format": "name",
+                "id": "4",
+                "instanceKey": "01M8726B9KDGCTA98GXBGE1PDZ",
+                "padding": [
+                  0,
+                  0,
+                  2,
+                  0
+                ],
+                "type": "query"
+              },
+              {
+                "as": "chart",
+                "id": "4",
+                "instanceKey": "01M8726B9K57CTBQ1BJDAZ5XEP",
+                "type": "query"
+              }
+            ],
+            "containerType": "stack",
+            "gridPosition": {
+              "h": 40,
+              "w": 24,
+              "x": 0,
+              "y": 32
+            },
+            "instanceKey": "01M8726B9KRGQX119Z91BSF5MK",
+            "metadata": {
+              "attachedQueryKey": "4"
+            },
+            "name": "Monthly Revenue",
+            "style": "tile"
+          },
+          {
+            "children": [
+              {
+                "as": "metadata",
+                "format": "name",
+                "id": "5",
+                "instanceKey": "01M8726B9KC3W6XPFZCCARFSNY",
+                "padding": [
+                  0,
+                  0,
+                  2,
+                  0
+                ],
+                "type": "query"
+              },
+              {
+                "as": "chart",
+                "id": "5",
+                "instanceKey": "01M8726B9KYXS2Q2K70E3BW52E",
+                "type": "query"
+              }
+            ],
+            "containerType": "stack",
+            "gridPosition": {
+              "h": 40,
+              "w": 12,
+              "x": 0,
+              "y": 72
+            },
+            "instanceKey": "01M8726B9KXTXSSZXMRA0178TS",
+            "metadata": {
+              "attachedQueryKey": "5"
+            },
+            "name": "Revenue by Product Type",
+            "style": "tile"
+          },
+          {
+            "children": [
+              {
+                "as": "metadata",
+                "format": "name",
+                "id": "6",
+                "instanceKey": "01M8726B9KHTF3BF1A3XZCYF8R",
+                "padding": [
+                  0,
+                  0,
+                  2,
+                  0
+                ],
+                "type": "query"
+              },
+              {
+                "as": "chart",
+                "id": "6",
+                "instanceKey": "01M8726B9KD0V9ADAA8X126BEG",
+                "type": "query"
+              }
+            ],
+            "containerType": "stack",
+            "gridPosition": {
+              "h": 40,
+              "w": 12,
+              "x": 12,
+              "y": 72
+            },
+            "instanceKey": "01M8726B9KQ37ZWRHTVYVR20K3",
+            "metadata": {
+              "attachedQueryKey": "6"
+            },
+            "name": "Revenue by Location",
+            "style": "tile"
+          },
+          {
+            "children": [
+              {
+                "as": "metadata",
+                "format": "name",
+                "id": "7",
+                "instanceKey": "01M8726B9K2B5MRNQ14R9A51RK",
+                "padding": [
+                  0,
+                  0,
+                  2,
+                  0
+                ],
+                "type": "query"
+              },
+              {
+                "as": "chart",
+                "id": "7",
+                "instanceKey": "01M8726B9KFYGPQ90KWEA2E10V",
+                "type": "query"
+              }
+            ],
+            "containerType": "stack",
+            "gridPosition": {
+              "h": 40,
+              "w": 24,
+              "x": 0,
+              "y": 112
+            },
+            "instanceKey": "01M8726B9KSG4QK47GK9D4MRJ7",
+            "metadata": {
+              "attachedQueryKey": "7"
+            },
+            "name": "Top 10 Products by Revenue",
+            "style": "tile"
+          }
+        ],
+        "containerType": "grid",
+        "instanceKey": "01M8726B9KT55ZB4TYNM2T5JYW",
+        "name": "Page layout"
+      },
+      "containerType": "page",
+      "instanceKey": "01M8726B9K0K1VGC8TR1R4398J",
+      "name": "Sales Overview"
+    }
+  ],
+  "controls": {
+    "data": {
+    },
+    "order": [
+    ]
+  },
+  "description": null,
+  "modelId": "27356862-e549-4eb4-9228-7417f9df61be",
+  "name": "Sales Overview",
+  "queryPresentations": {
+    "data": {
+      "1": {
+        "aiConfig": null,
+        "automaticVis": true,
+        "description": null,
+        "filterOrder": [
+        ],
+        "isSql": false,
+        "name": "Total Revenue",
+        "prefersChart": true,
+        "query": {
+          "aiGenerated": true,
+          "calculations": [
+          ],
+          "column_limit": 50,
+          "column_totals": {
+          },
+          "custom_summary_types": {
+          },
+          "dbtMode": false,
+          "default_group_by": true,
+          "dimensionIndex": 0,
+          "fields": [
+            "my_universal_schema_reference__order_items.revenue"
+          ],
+          "fill_fields": [
+          ],
+          "filters": {
+          },
+          "join_paths_from_topic_name": "orders",
+          "join_via_map": {
+          },
+          "limit": 1000,
+          "metadata": {
+          },
+          "parsed": true,
+          "pivots": [
+          ],
+          "rewriteSql": true,
+          "row_totals": {
+          },
+          "sorts": [
+          ],
+          "table": "my_universal_schema_reference__orders",
+          "userEditedSQL": "SELECT ${my_universal_schema_reference__order_items.revenue} FROM ${orders}",
+          "version": 9
+        },
+        "resultConfig": {
+        },
+        "sourceQueryPresentationKey": null,
+        "subTitle": null,
+        "topicName": "orders",
+        "type": "query",
+        "visConfig": {
+          "chartType": "kpi",
+          "fields": [
+            "my_universal_schema_reference__order_items.revenue"
+          ],
+          "version": 0,
+          "visConfig": {
+            "config": {
+              "alignment": "center",
+              "dynamicFontSize": true,
+              "fontKPISize": "",
+              "markdownConfig": [
+                {
+                  "config": {
+                    "descriptionBefore": "",
+                    "field": {
+                      "field": {
+                        "name": "my_universal_schema_reference__order_items.revenue"
+                      },
+                      "label": {
+                        "value": "Total Revenue"
+                      },
+                      "row": "_first"
+                    }
+                  },
+                  "id": "number-1",
+                  "lastModified": 0,
+                  "type": "number"
+                }
+              ],
+              "version": 1,
+              "verticalAlignment": "center"
+            },
+            "visType": "omni-kpi"
+          }
+        }
+      },
+      "2": {
+        "aiConfig": null,
+        "automaticVis": true,
+        "description": null,
+        "filterOrder": [
+        ],
+        "isSql": false,
+        "name": "Total Orders",
+        "prefersChart": true,
+        "query": {
+          "aiGenerated": true,
+          "calculations": [
+          ],
+          "column_limit": 50,
+          "column_totals": {
+          },
+          "custom_summary_types": {
+          },
+          "dbtMode": false,
+          "default_group_by": true,
+          "dimensionIndex": 0,
+          "fields": [
+            "my_universal_schema_reference__orders.count"
+          ],
+          "fill_fields": [
+          ],
+          "filters": {
+          },
+          "join_paths_from_topic_name": "orders",
+          "join_via_map": {
+          },
+          "limit": 1000,
+          "metadata": {
+            "my_universal_schema_reference__orders.count": {
+              "format": "BIGNUMBER_0"
+            }
+          },
+          "parsed": true,
+          "pivots": [
+          ],
+          "rewriteSql": true,
+          "row_totals": {
+          },
+          "sorts": [
+          ],
+          "table": "my_universal_schema_reference__orders",
+          "userEditedSQL": "SELECT ${my_universal_schema_reference__orders.count} FROM ${orders}",
+          "version": 9
+        },
+        "resultConfig": {
+        },
+        "sourceQueryPresentationKey": null,
+        "subTitle": null,
+        "topicName": "orders",
+        "type": "query",
+        "visConfig": {
+          "chartType": "kpi",
+          "fields": [
+            "my_universal_schema_reference__orders.count"
+          ],
+          "version": 0,
+          "visConfig": {
+            "config": {
+              "alignment": "center",
+              "dynamicFontSize": true,
+              "fontKPISize": "",
+              "markdownConfig": [
+                {
+                  "config": {
+                    "descriptionBefore": "",
+                    "field": {
+                      "field": {
+                        "name": "my_universal_schema_reference__orders.count"
+                      },
+                      "label": {
+                        "value": "Total Orders"
+                      },
+                      "row": "_first"
+                    }
+                  },
+                  "id": "number-1",
+                  "lastModified": 0,
+                  "type": "number"
+                }
+              ],
+              "version": 1,
+              "verticalAlignment": "center"
+            },
+            "visType": "omni-kpi"
+          }
+        }
+      },
+      "3": {
+        "aiConfig": null,
+        "automaticVis": true,
+        "description": null,
+        "filterOrder": [
+        ],
+        "isSql": false,
+        "name": "Total Customers",
+        "prefersChart": true,
+        "query": {
+          "aiGenerated": true,
+          "calculations": [
+          ],
+          "column_limit": 50,
+          "column_totals": {
+          },
+          "custom_summary_types": {
+          },
+          "dbtMode": false,
+          "default_group_by": true,
+          "dimensionIndex": 0,
+          "fields": [
+            "my_universal_schema_reference__customers.count"
+          ],
+          "fill_fields": [
+          ],
+          "filters": {
+          },
+          "join_paths_from_topic_name": "orders",
+          "join_via_map": {
+          },
+          "limit": 1000,
+          "metadata": {
+            "my_universal_schema_reference__customers.count": {
+              "format": "BIGNUMBER_0"
+            }
+          },
+          "parsed": true,
+          "pivots": [
+          ],
+          "rewriteSql": true,
+          "row_totals": {
+          },
+          "sorts": [
+          ],
+          "table": "my_universal_schema_reference__orders",
+          "userEditedSQL": "SELECT ${my_universal_schema_reference__customers.count} FROM ${orders}",
+          "version": 9
+        },
+        "resultConfig": {
+        },
+        "sourceQueryPresentationKey": null,
+        "subTitle": null,
+        "topicName": "orders",
+        "type": "query",
+        "visConfig": {
+          "chartType": "kpi",
+          "fields": [
+            "my_universal_schema_reference__customers.count"
+          ],
+          "version": 0,
+          "visConfig": {
+            "config": {
+              "alignment": "center",
+              "dynamicFontSize": true,
+              "fontKPISize": "",
+              "markdownConfig": [
+                {
+                  "config": {
+                    "descriptionBefore": "",
+                    "field": {
+                      "field": {
+                        "name": "my_universal_schema_reference__customers.count"
+                      },
+                      "label": {
+                        "value": "Total Customers"
+                      },
+                      "row": "_first"
+                    }
+                  },
+                  "id": "number-1",
+                  "lastModified": 0,
+                  "type": "number"
+                }
+              ],
+              "version": 1,
+              "verticalAlignment": "center"
+            },
+            "visType": "omni-kpi"
+          }
+        }
+      },
+      "4": {
+        "aiConfig": null,
+        "automaticVis": true,
+        "description": null,
+        "filterOrder": [
+        ],
+        "isSql": false,
+        "name": "Monthly Revenue",
+        "prefersChart": true,
+        "query": {
+          "aiGenerated": true,
+          "calculations": [
+          ],
+          "column_limit": 50,
+          "column_totals": {
+          },
+          "custom_summary_types": {
+          },
+          "dbtMode": false,
+          "default_group_by": true,
+          "dimensionIndex": 1,
+          "fields": [
+            "my_universal_schema_reference__orders.ordered_at[month]",
+            "my_universal_schema_reference__order_items.revenue"
+          ],
+          "fill_fields": [
+          ],
+          "filters": {
+          },
+          "join_paths_from_topic_name": "orders",
+          "join_via_map": {
+          },
+          "limit": 1000,
+          "metadata": {
+          },
+          "parsed": true,
+          "pivots": [
+          ],
+          "rewriteSql": true,
+          "row_totals": {
+          },
+          "sorts": [
+            {
+              "column_name": "my_universal_schema_reference__orders.ordered_at[month]",
+              "is_column_sort": false,
+              "null_sort": "DIALECT_DEFAULT",
+              "sort_descending": false
+            }
+          ],
+          "table": "my_universal_schema_reference__orders",
+          "userEditedSQL": "SELECT ${my_universal_schema_reference__orders.ordered_at[month]}, ${my_universal_schema_reference__order_items.revenue} FROM ${orders} GROUP BY 1 ORDER BY 1",
+          "version": 9
+        },
+        "resultConfig": {
+        },
+        "sourceQueryPresentationKey": null,
+        "subTitle": null,
+        "topicName": "orders",
+        "type": "query",
+        "visConfig": {
+          "chartType": null,
+          "fields": [
+            "my_universal_schema_reference__orders.ordered_at[month]",
+            "my_universal_schema_reference__order_items.revenue"
+          ],
+          "version": 0,
+          "visConfig": {
+            "config": {
+              "_dependentAxis": "y",
+              "behaviors": {
+                "useLayerCompiler": true
+              },
+              "configType": "cartesian",
+              "series": [
+                {
+                  "field": {
+                    "name": "my_universal_schema_reference__order_items.revenue"
+                  },
+                  "mark": {
+                    "type": "line"
+                  },
+                  "yAxis": "y"
+                }
+              ],
+              "tooltip": [
+                {
+                  "field": {
+                    "name": "my_universal_schema_reference__orders.ordered_at[month]"
+                  }
+                },
+                {
+                  "field": {
+                    "name": "my_universal_schema_reference__order_items.revenue"
+                  }
+                }
+              ],
+              "version": 0,
+              "x": {
+                "axis": {
+                  "label": {
+                    "format": {
+                      "angle": 0,
+                      "format": "%b %Y"
+                    }
+                  }
+                },
+                "field": {
+                  "name": "my_universal_schema_reference__orders.ordered_at[month]"
+                }
+              },
+              "y": {
+                "axis": {
+                  "label": {
+                    "format": {
+                      "format": "BIGUSDCURRENCY"
+                    }
+                  }
+                }
+              }
+            },
+            "visType": "basic"
+          }
+        }
+      },
+      "5": {
+        "aiConfig": null,
+        "automaticVis": true,
+        "description": null,
+        "filterOrder": [
+        ],
+        "isSql": false,
+        "name": "Revenue by Product Type",
+        "prefersChart": true,
+        "query": {
+          "aiGenerated": true,
+          "calculations": [
+          ],
+          "column_limit": 50,
+          "column_totals": {
+          },
+          "custom_summary_types": {
+          },
+          "dbtMode": false,
+          "default_group_by": true,
+          "dimensionIndex": 1,
+          "fields": [
+            "my_universal_schema_reference__products.product_type",
+            "my_universal_schema_reference__order_items.revenue"
+          ],
+          "fill_fields": [
+          ],
+          "filters": {
+          },
+          "join_paths_from_topic_name": "orders",
+          "join_via_map": {
+          },
+          "limit": 1000,
+          "metadata": {
+          },
+          "parsed": true,
+          "pivots": [
+          ],
+          "rewriteSql": true,
+          "row_totals": {
+          },
+          "sorts": [
+          ],
+          "table": "my_universal_schema_reference__orders",
+          "userEditedSQL": "SELECT ${my_universal_schema_reference__products.product_type}, ${my_universal_schema_reference__order_items.revenue} FROM ${orders} GROUP BY 1",
+          "version": 9
+        },
+        "resultConfig": {
+        },
+        "sourceQueryPresentationKey": null,
+        "subTitle": null,
+        "topicName": "orders",
+        "type": "query",
+        "visConfig": {
+          "chartType": "pie",
+          "fields": [
+            "my_universal_schema_reference__products.product_type",
+            "my_universal_schema_reference__order_items.revenue"
+          ],
+          "version": 0,
+          "visConfig": {
+            "config": {
+              "color": {
+                "field": {
+                  "name": "my_universal_schema_reference__products.product_type"
+                }
+              },
+              "configType": "polar",
+              "innerRadius": 4,
+              "theta": {
+                "field": {
+                  "name": "my_universal_schema_reference__order_items.revenue"
+                }
+              },
+              "tooltip": [
+                {
+                  "field": {
+                    "name": "my_universal_schema_reference__products.product_type"
+                  }
+                },
+                {
+                  "field": {
+                    "name": "my_universal_schema_reference__order_items.revenue"
+                  }
+                }
+              ]
+            },
+            "visType": "basic"
+          }
+        }
+      },
+      "6": {
+        "aiConfig": null,
+        "automaticVis": true,
+        "description": null,
+        "filterOrder": [
+        ],
+        "isSql": false,
+        "name": "Revenue by Location",
+        "prefersChart": true,
+        "query": {
+          "aiGenerated": true,
+          "calculations": [
+          ],
+          "column_limit": 50,
+          "column_totals": {
+          },
+          "custom_summary_types": {
+          },
+          "dbtMode": false,
+          "default_group_by": true,
+          "dimensionIndex": 1,
+          "fields": [
+            "my_universal_schema_reference__locations.location_name",
+            "my_universal_schema_reference__order_items.revenue"
+          ],
+          "fill_fields": [
+          ],
+          "filters": {
+          },
+          "join_paths_from_topic_name": "orders",
+          "join_via_map": {
+          },
+          "limit": 1000,
+          "metadata": {
+          },
+          "parsed": true,
+          "pivots": [
+          ],
+          "rewriteSql": true,
+          "row_totals": {
+          },
+          "sorts": [
+            {
+              "column_name": "my_universal_schema_reference__order_items.revenue",
+              "is_column_sort": false,
+              "null_sort": "DIALECT_DEFAULT",
+              "sort_descending": true
+            }
+          ],
+          "table": "my_universal_schema_reference__orders",
+          "userEditedSQL": "SELECT ${my_universal_schema_reference__locations.location_name}, ${my_universal_schema_reference__order_items.revenue} FROM ${orders} GROUP BY 1 ORDER BY 2 DESC",
+          "version": 9
+        },
+        "resultConfig": {
+        },
+        "sourceQueryPresentationKey": null,
+        "subTitle": null,
+        "topicName": "orders",
+        "type": "query",
+        "visConfig": {
+          "chartType": "barGrouped",
+          "fields": [
+            "my_universal_schema_reference__locations.location_name",
+            "my_universal_schema_reference__order_items.revenue"
+          ],
+          "version": 0,
+          "visConfig": {
+            "config": {
+              "_dependentAxis": "x",
+              "behaviors": {
+                "useLayerCompiler": true
+              },
+              "color": {
+                "_stack": "group"
+              },
+              "configType": "cartesian",
+              "series": [
+                {
+                  "field": {
+                    "name": "my_universal_schema_reference__order_items.revenue"
+                  },
+                  "mark": {
+                    "type": "bar"
+                  },
+                  "xAxis": "x"
+                }
+              ],
+              "tooltip": [
+                {
+                  "field": {
+                    "name": "my_universal_schema_reference__locations.location_name"
+                  }
+                },
+                {
+                  "field": {
+                    "name": "my_universal_schema_reference__order_items.revenue"
+                  }
+                }
+              ],
+              "version": 0,
+              "x": {
+                "color": {
+                  "_stack": "group"
+                }
+              },
+              "x2": {
+                "color": {
+                  "_stack": "group"
+                }
+              },
+              "y": {
+                "field": {
+                  "name": "my_universal_schema_reference__locations.location_name"
+                }
+              }
+            },
+            "visType": "basic"
+          }
+        }
+      },
+      "7": {
+        "aiConfig": null,
+        "automaticVis": true,
+        "description": null,
+        "filterOrder": [
+        ],
+        "isSql": false,
+        "name": "Top 10 Products by Revenue",
+        "prefersChart": true,
+        "query": {
+          "aiGenerated": true,
+          "calculations": [
+          ],
+          "column_limit": 50,
+          "column_totals": {
+          },
+          "custom_summary_types": {
+          },
+          "dbtMode": false,
+          "default_group_by": true,
+          "dimensionIndex": 1,
+          "fields": [
+            "my_universal_schema_reference__products.product_name",
+            "my_universal_schema_reference__order_items.revenue"
+          ],
+          "fill_fields": [
+          ],
+          "filters": {
+          },
+          "join_paths_from_topic_name": "orders",
+          "join_via_map": {
+          },
+          "limit": 10,
+          "metadata": {
+          },
+          "parsed": true,
+          "pivots": [
+          ],
+          "rewriteSql": true,
+          "row_totals": {
+          },
+          "sorts": [
+            {
+              "column_name": "my_universal_schema_reference__order_items.revenue",
+              "is_column_sort": false,
+              "null_sort": "DIALECT_DEFAULT",
+              "sort_descending": true
+            }
+          ],
+          "table": "my_universal_schema_reference__orders",
+          "userEditedSQL": "SELECT ${my_universal_schema_reference__products.product_name}, ${my_universal_schema_reference__order_items.revenue} FROM ${orders} GROUP BY 1 ORDER BY 2 DESC LIMIT 10",
+          "version": 9
+        },
+        "resultConfig": {
+        },
+        "sourceQueryPresentationKey": null,
+        "subTitle": null,
+        "topicName": "orders",
+        "type": "query",
+        "visConfig": {
+          "chartType": "barGrouped",
+          "fields": [
+            "my_universal_schema_reference__products.product_name",
+            "my_universal_schema_reference__order_items.revenue"
+          ],
+          "version": 0,
+          "visConfig": {
+            "config": {
+              "_dependentAxis": "x",
+              "behaviors": {
+                "useLayerCompiler": true
+              },
+              "color": {
+                "_stack": "group"
+              },
+              "configType": "cartesian",
+              "series": [
+                {
+                  "field": {
+                    "name": "my_universal_schema_reference__order_items.revenue"
+                  },
+                  "mark": {
+                    "type": "bar"
+                  },
+                  "xAxis": "x"
+                }
+              ],
+              "tooltip": [
+                {
+                  "field": {
+                    "name": "my_universal_schema_reference__products.product_name"
+                  }
+                },
+                {
+                  "field": {
+                    "name": "my_universal_schema_reference__order_items.revenue"
+                  }
+                }
+              ],
+              "version": 0,
+              "x": {
+                "color": {
+                  "_stack": "group"
+                }
+              },
+              "x2": {
+                "color": {
+                  "_stack": "group"
+                }
+              },
+              "y": {
+                "field": {
+                  "name": "my_universal_schema_reference__products.product_name"
+                }
+              }
+            },
+            "visType": "basic"
+          }
+        }
+      }
+    },
+    "order": [
+      "1",
+      "2",
+      "3",
+      "4",
+      "5",
+      "6",
+      "7"
+    ]
+  },
+  "settings": {
+    "controlBar": {
+      "collapsible": true,
+      "defaultExpanded": false,
+      "fixed": false
+    },
+    "crossfilterEnabled": false,
+    "customText": null,
+    "facetFilters": false,
+    "refreshInterval": null,
+    "runQueriesOn": null
+  }
+}
